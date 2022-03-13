@@ -13,7 +13,7 @@ void setupDioUtil(){
 bool isButton(int digIn){
   int b = digitalRead(digIn);
   Serial.print(F("Button "));
-  Serial.println(digIn);    
+  Serial.print(digIn);    
   Serial.print(F(" state: "));
   Serial.println(b);    
   return b == BUTTON_PRESSED;

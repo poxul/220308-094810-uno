@@ -47,7 +47,7 @@ void printDateTime(const RtcDateTime &dt)
 
     snprintf_P(datestring, 
             countof(datestring),
-            PSTR("%02u/%02u/%04u %02u:%02u:%02u"),
+            PSTR("%02u/%02u/%04u-%02u:%02u:%02u"),
             dt.Month(),
             dt.Day(),
             dt.Year(),
@@ -176,7 +176,7 @@ void checkRTC()
 void showLcdTemperature(){
     lcd.setCursor(0,0);
     lcd.print("Temperatur:");
-    lcd.setCursor(0,6);
+    lcd.setCursor(6,1);
     lcd.print(temperatureResult.getTemperature());
     lcd.print(" C");
 }
