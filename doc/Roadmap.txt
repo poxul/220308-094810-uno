@@ -1,0 +1,164 @@
+
+## Aduino IDE einrichten und Testcode auf das Board laden.
+    https://code.visualstudio.com/docs/?dv=linux64_deb
+    sudo dpkg -i code_1.65.0-1646220682_amd64.deb
+    
+    https://devdrik.de/arduino-in-vs-code/
+    sudo apt install platformio    
+    
+    Projekt erstellen Arduino UNO ( Serial chip is CP2102 )
+    /home/mila/Dokumente/PlatformIO/Projects/220308-094810-uno/src
+    
+    -> PIO HOME
+    LiquidCrystal_I2C "A library for DFRobot I2C LCD displays"
+    
+    lib_deps =
+  # RECOMMENDED
+  # Accept new functionality in a backwards compatible manner and patches
+  marcoschwartz/LiquidCrystal_I2C @ ^1.1.4
+
+  # Accept only backwards compatible bug fixes
+  # (any version with the same major and minor versions, and an equal or greater patch version)
+  marcoschwartz/LiquidCrystal_I2C @ ~1.1.4
+
+  # The exact version
+  marcoschwartz/LiquidCrystal_I2C @ 1.1.4
+    
+    
+    PlantSupport
+    
+    
+    Build funktioniert.
+    Upload muss noch konfiguriert werden.
+    
+    -----------------------------------------------------------------------------
+    Anschlussplatte:
+    https://wiki.keyestudio.com/Ks0004_keyestudio_Sensor_Shield_V5
+
+     
+- Anschluss und Test der LCD Anzeige.
+    - Texte 
+    - Cursor Steuereung
+    - Refreshraten testen ( Flackern vermeiden )
+    - Temperatur anzeigen
+    
+- Visual Studio Code testen    
+    
+- Temperaturmessung
+    - Messen und anzeigen der Temperatur und Luftfeugchtigkeit
+    - Test ob Laufanzeige oder Umschalten besser ist 
+    
+- Messung der Bodenfeuchtigkeit.
+    - Zyklische Messung und Anzeige der Bodenfeuchtigkeit
+    - Bereich und sinnvolle Grenzwerte ermitteln
+    - LCD Anzeige 
+    
+- Testen des Akustischen Signals und reaktion auf Grenzwerte
+    - Kurzes Signal, wenn Genzwerte überschritten werden.
+    
+- RTC testen
+    - Anzeige 
+    - Test der Eingabe
+
+- Testen der Kommunikation zum RASPI
+
+- Prüfen, ob noch Pins zur Ansteuerung von LEDs zur verfügung stehen. 
+    ( Eine Anzeige der Grenzwerte an den Messfühlern für die Bodenfeuchte wäre toll )
+    
+- Prüfen ob noch Pins für den Näherungssensor zur verfügung stehen. 
+    ( Wenn sich jemand in der Nähe befindet könnte man das Licht für die LCD Anzeige einschalten. )
+    
+
+- Test der Solarversorgung
+- RTC zur Überwachung der Innentemperatur testen.
+    lcd.print("Temp: ");
+    lcd.print(rtc.getTemp());
+    lcd.print(" C");
+    lcd.print(" ");
+    
+    
+    
+    float tempDS3231() {
+  // Die Temperatur des DS3231 auslesen  
+  float temp;
+  int msb, lsb;
+  Wire.beginTransmission(DS3231_ADDRESSE);
+  Wire.write(0x11); // DS3231 Register zu 11h
+  Wire.endTransmission();
+  Wire.requestFrom(DS3231_ADDRESSE, 2); // 2 Byte Daten vom DS3231 holen
+  msb = Wire.read();
+  lsb = Wire.read();
+  temp=((msb << 2) + (lsb >> 6) ) /4.0;
+  return temp;
+    }
+    
+    Clock  SensorShield
+    GND     GND
+    VCC     VCC
+    SDA     A4
+    SDL     A5
+    
+
+- Festlegung der Zielfunktionen.
+- Mechanischer Aufbau und Gehäuse
+    Rhombenkuboktaedernetz
+    Zur Belüftung werden die Spizen der Dreiecke abgeschnitten.
+    
+
+    
+    
+    Messwerte:
+    - Temperatur 
+    - Luftfeugchtigkeit
+    - 3 * Bodenfeuchte
+    - Innentemperatur
+    - Datum
+    - Uhrzeit
+    
+    Anzeige: 
+        Zeile1: |Temperatur:     |
+        Zeile2: |        22.30 °C|
+        
+    Wenn die Bodenfeuchte an einem Sensor auf Trocken steht wird dieser Wert sofort^ angezeigt und die Anzeige
+    blinkt.
+    
+    Wenn die Innentemperatur über 45°c ist sollte auch eine Warnung angezeigt werden.
+    
+    Wenn kein Alarmwert angezeigt wird wechselt die Anzeige zyklisch ( alle 5 Sekunden ) zwischen den Werten.
+    
+    
+    11.03.2022    
+        
+    - RTC testen
+        - Datum / Uhrzeit
+        - Temperatur
+    
+    - Solarversorgung testen.
+
+    - Git
+    
+    - Zyklische Anzeige der Messwerte
+        - Zyklus zum auslesen der Messwerte ( 1 mal pro Sekunde )
+        - Auswereten der Messwerte
+        - Zyklus zum Anzeigen der Informationen ( alle 3 Sekunden )
+    
+    - Mechanischer Aufbau
+        Rhombenkuboktaedernetz
+        Zur Belüftung werden die Spizen der Dreiecke abgeschnitten.
+    
+    - Probebetrieb
+    
+    - Festlegung der Software Funktion
+    - Implementierung
+    
+    
+    ----------------
+        
+        - Testen der Kommunikation zum RASPI
+        - Gehäuse
+        
+    
+    
+    
+    
+    
