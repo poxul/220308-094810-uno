@@ -41,6 +41,33 @@
     - Cursor Steuereung
     - Refreshraten testen ( Flackern vermeiden )
     - Temperatur anzeigen
+
+
+    Library Support Functions:
+
+    LiquidCrystal_I2C() //set the LCD address for a 16 chars and 2 line display
+    init() //Initialization for the LCD
+    clear() //clear display, set cursor position to zero
+    home() //set cursor position to zero
+    createChar() //Fill the first 8 CGRAM locations with custom characters
+    setCursor() //set the position of the cursor
+    cursor() //Turns the underline cursor on
+    noCursor() //Turns the underline cursor off
+    blink() //Turn on the blinking cursor
+    noBlink() //Turn off the blinking cursor
+    display() //Turn the display on(quickly)
+    noDisplay() //Turn the display 0ff(quickly)
+    backlight() //Turn the backlight on
+    noBacklight() //Turn the backlight off
+    scrollDisplayLeft() //Make the display scroll left without changing the RAM
+    scrollDisplayRight() //Make the display scroll right without changing the RAM
+    autoscroll() //This will 'right justify' text from the cursor
+    noAutoscroll() //This will 'left justify' text from the cursor
+    leftToRight() //This is for text that flows Left to Right
+    rightToLeft() //This is for text that flows Right to Left
+
+
+
     
 - Visual Studio Code testen    
     
@@ -156,9 +183,31 @@
         
         - Testen der Kommunikation zum RASPI
         - Gehäuse
-        
+
+    ----------------
     
+    HC – SR501 	Bewegungssensor
+    Technische Daten	:
+    Betriebsspannung 	4,5V bis 20V
+    Ruhestromaufnahme 	< 50µA
+    Abmaße 	            32 mm x 24 mm
+    Linsendurchmesser 	23 mm
+    Umgebungstemperatur 	-15 °C bis + 70 °C
+    Reichweite 	3 m bis 7 m (Regelbar)
+    Auslösedauer 	5sek. bis 5min. (Regelbar)
+
+    ----------------
     
-    
-    
+    Gehäuse:
+
+    12 Platten quadratisch 80 * 80 mm
+        5 Platten ohne Anpassung
+        6 Platten mit einem Loch in der Mitte 10 mm
+        1 Platte mit einem rechteckigen Ausschnitt ( LCD ) ?- 72 * 25 mm
+
+    8 Patten dreicekig 80 mm * 69 mmm 
+        4 Platten ohne Anpassung
+        4 Platten mit einem Loch 24 mm ??
+
+    1 Platte rechteckig 80 * 92 mm 
     
