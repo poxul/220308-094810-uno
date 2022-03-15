@@ -14,6 +14,16 @@
 #include "lcdUtil.h"
 #include "rtClock.h"
 
+enum ShowState
+{
+  STATE_TEMPERATURE,
+  STATE_HUMIDITY,
+  STATE_SOIL_SENSOR_1,
+  STATE_SOIL_SENSOR_2,
+  STATE_SOIL_SENSOR_3,
+  STATE_MAX
+};
+
 #define countof(a) (sizeof(a) / sizeof(a[0]))
 
 #define DHTPIN 8 // define interface
@@ -49,6 +59,8 @@ RtcDS3231<TwoWire> Rtc(Wire);
 unsigned long lastMeasurement;
 unsigned long lastView;
 
+unsigned int showState = 0;
+
 /**
  * @brief show temperature on lcd
  *
@@ -60,6 +72,19 @@ void showLcdTemperature()
   lcd.setCursor(6, 1);
   lcd.print(temperatureResult.getTemperature());
   lcd.print(" C");
+}
+
+/**
+ * @brief show air humidity on lcd
+ *
+ */
+void showLcdHumidity()
+{
+  lcd.setCursor(0, 0);
+  lcd.print("Luftfeuchtigkeit");
+  lcd.setCursor(4, 1);
+  lcd.print(temperatureResult.getHumidity());
+  lcd.print(" %%");
 }
 
 /**
@@ -123,6 +148,13 @@ void measure()
 void checkState()
 {
   Serial.println("start check state");
+  
+  if (showState >= STATE_MAX)
+  {
+    showState = STATE_TEMPERATURE;
+  }
+  Serial.print("new state ");
+  Serial.println(showState);
 }
 
 /**
@@ -148,7 +180,21 @@ void show()
     lcd.noBacklight();
   }
   // show temperature on lcd
-  showLcdTemperature();
+
+  switch (showState)
+  {
+  case STATE_TEMPERATURE:
+    showLcdTemperature();
+    break;
+  case STATE_HUMIDITY:
+    showLcdHumidity();
+    break;
+
+  default:
+    break;
+  }
+
+  showState++;
 }
 
 /**
