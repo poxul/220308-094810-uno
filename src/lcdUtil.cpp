@@ -9,12 +9,11 @@ extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
 
 void setupLCD(){
-  lcd.init();                      // initialize the lcd 
+  lcd.init(); // initialize the lcd 
   // Print a message to the LCD.
-  lcd.setCursor(3,0);
-  lcd.print("Hello, world!");
-  lcd.setCursor(2,1);
-  lcd.print("Plant-Support");
   lcd.clear();
-  lcd.noBacklight();
+  lcd.setCursor(2,0);
+  lcd.print("Plant-Support");
+  lcd.setCursor(2,1);
+  lcd.print("Version 1.0");
 }

@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Wire.h> 
+#include <Wire.h>
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -15,66 +15,76 @@
 #define SOIL_MOISTURE_WET "pretty wet"
 #define SOIL_MOISTURE_HUMID "humid"
 #define SOIL_MOISTURE_DRY "dry"
-#define SOIL_MOISTURE_EXTREMLY_DRY "extremly dry"
 
-#define SOIL_MOISTURE_VALUE_1 285 // min value -> sensor is in water
-#define SOIL_MOISTURE_VALUE_2 387 // 
-#define SOIL_MOISTURE_VALUE_3 489 // 
-#define SOIL_MOISTURE_VALUE_4 591 // max value -> sensor is in air
+#define SOIL_MOISTURE_MIN 285 // 0% min value -> sensor is in water
+#define SOIL_MOISTURE_MAX 591 // 100% max value -> sensor is in air
+
+#define NUM_STEPS 3
 
 extern DebugLogger logger;
 
-SoilResult::SoilResult(){}
+SoilResult::SoilResult() {}
 
-int SoilResult::getValue(){
+int SoilResult::getValue()
+{
     return value;
 }
 
-void SoilResult::setValue(int v){
+void SoilResult::setValue(int v)
+{
     value = v;
 }
 
-void SoilResult::setCondition(SoilResult::SoilCondition c){
+void SoilResult::setCondition(SoilResult::SoilCondition c)
+{
     soil = c;
 }
 
- SoilResult::SoilCondition SoilResult::getSoilCondition(){
-     return soil;
- }
-
-/**
- * @brief Construct a new Soil Moisture:: Soil Moisture object
- * 
- * @param ax address of the analog input
- */
-SoilMoisture::SoilMoisture(int ax) {
-    analogInput = ax;
+SoilResult::SoilCondition SoilResult::getSoilCondition()
+{
+    return soil;
 }
 
 /**
- * @brief read analog result of soil moisture sensor 
- * 
- * @return SoilResult* 
+ * @brief Construct a new Soil Moisture:: Soil Moisture object
+ *
+ * @param ax address of the analog input
  */
-void SoilMoisture::read(SoilResult* result) {
+SoilMoisture::SoilMoisture(int ax)
+{
+    analogInput = ax;
+    step = (SOIL_MOISTURE_MAX - SOIL_MOISTURE_MIN) / NUM_STEPS;
+}
+
+/**
+ * @brief read analog result of soil moisture sensor
+ *
+ * @return SoilResult*
+ */
+void SoilMoisture::read(SoilResult *result)
+{
     soilMoistureValue = analogRead(analogInput); // set the humidity value read by soil humidity sensor to soilMoistureValue
     result->setValue(soilMoistureValue);
-    if(soilMoistureValue < SOIL_MOISTURE_VALUE_1)  {
+    int idx = ((soilMoistureValue - SOIL_MOISTURE_MIN) + (step / 2)) / step;
+    switch (idx)
+    {
+    case 0:
         Serial.print(SOIL_MOISTURE_WATER);
         result->setCondition(SoilResult::SoilCondition::water);
-    } else if(soilMoistureValue >= SOIL_MOISTURE_VALUE_1 && soilMoistureValue < SOIL_MOISTURE_VALUE_2)  {
+        break;
+    case 1:
         Serial.print(SOIL_MOISTURE_WET);
         result->setCondition(SoilResult::SoilCondition::wet);
-    } else if(soilMoistureValue >= SOIL_MOISTURE_VALUE_2 && soilMoistureValue < SOIL_MOISTURE_VALUE_3) {
+        break;
+    case 2:
         Serial.print(SOIL_MOISTURE_HUMID);
         result->setCondition(SoilResult::SoilCondition::humid);
-    } else if(soilMoistureValue < SOIL_MOISTURE_VALUE_4 && soilMoistureValue >= SOIL_MOISTURE_VALUE_3)  {
+        break;
+    default:
         Serial.print(SOIL_MOISTURE_DRY);
         result->setCondition(SoilResult::SoilCondition::dry);
-    } else {
-        Serial.print(SOIL_MOISTURE_EXTREMLY_DRY);
-        result->setCondition(SoilResult::SoilCondition::extra_dry);
+        break;
     }
     Serial.print(soilMoistureValue);
-    Serial.println(F(" x")); 
+    Serial.println(F(" x"));
 }
