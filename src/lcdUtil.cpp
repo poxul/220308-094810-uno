@@ -8,6 +8,7 @@
 extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
 
+
 void setupLCD(){
   lcd.init(); // initialize the lcd 
   // Print a message to the LCD.
