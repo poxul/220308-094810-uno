@@ -1,7 +1,4 @@
-void showLcdTemperature();
-void showLcdHumidity();
 void showLcd(unsigned int state);
-
 
 enum ShowState
 {
