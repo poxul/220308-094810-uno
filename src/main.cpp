@@ -132,9 +132,6 @@ void show()
   // Beep if the button 1 is pressed
   setBuzzer(isButton1());
 
-  // later use
-  isButton2();
-
   // check motion
   if (isMotion())
   {
@@ -147,7 +144,12 @@ void show()
   // show on lcd
   showLcd(showState);
 
-  showState++;
+  // change view state if button 2 is not pressed
+  if (!isButton2) 
+  {
+    showState++;
+  }
+
 }
 
 /**
