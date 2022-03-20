@@ -12,6 +12,7 @@
 #include "lcdUtil.h"
 #include "rtClock.h"
 #include "showUtil.h"
+#include "rtClock.h"
 
 extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
@@ -101,6 +102,29 @@ void showSoil3()
     showSoil("Pflanze 3", getValueString(soilResult3.getSoilCondition()), soilResult3.getValue());
 }
 
+void showDateTime(const RtcDateTime &dt)
+{
+    char datestring[20];
+
+    snprintf_P(datestring,
+               20,
+               PSTR("%02u/%02u/%04u"),
+               dt.Month(),
+               dt.Day(),
+               dt.Year());
+    lcd.setCursor(0, 0);
+    lcd.print(datestring);
+
+    snprintf_P(datestring,
+               20,
+               PSTR("%02u:%02u:%02u"),
+               dt.Hour(),
+               dt.Minute(),
+               dt.Second());
+    lcd.setCursor(0, 1);
+    lcd.print(datestring);
+}
+
 /**
  * @brief show state called every 3 seconds
  *
@@ -125,6 +149,9 @@ void showLcd(unsigned int state)
         showSoil2();
         break;
     case STATE_SOIL_SENSOR_3:
+        showSoil3();
+        break;
+    case STATE_DATE:
         showSoil3();
         break;
 
