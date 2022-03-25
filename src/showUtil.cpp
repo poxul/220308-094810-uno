@@ -6,14 +6,12 @@
 #include <DHT_U.h>
 #include <RtcDS3231.h>
 
-
 #include "debugLogger.h"
 #include "soilMoisture.h"
 #include "dhtMeasure.h"
 #include "lcdUtil.h"
 #include "rtClock.h"
 #include "showUtil.h"
-
 
 extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
@@ -86,17 +84,20 @@ const char *getValueString(SoilResult::SoilCondition condition)
     }
 }
 
+
+void showSoil(char* txt, SoilResult* soilResult){
+    showSoil(txt, 
+        getValueString(soilResult->getSoilCondition()), 
+        soilResult->getValue(),
+        soilResult->getSoilCondition() == SoilResult::SoilCondition::dry);
+}
 /**
  * @brief show soil moisture sensor 1
  *
  */
 void showSoil1()
-{
-    
-    showSoil("Pflanze 1", 
-        getValueString(soilResult1.getSoilCondition()), 
-        soilResult1.getValue(),
-        soilResult1.getSoilCondition() == SoilResult::SoilCondition::dry);
+{    
+    showSoil("Pflanze 1", &soilResult1);
 }
 
 /**
@@ -105,10 +106,7 @@ void showSoil1()
  */
 void showSoil2()
 {
-    showSoil("Pflanze 2", 
-        getValueString(soilResult2.getSoilCondition()), 
-        soilResult2.getValue(),
-        soilResult2.getSoilCondition() == SoilResult::SoilCondition::dry);
+    showSoil("Pflanze 2", &soilResult2); 
 }
 
 /**
@@ -117,10 +115,7 @@ void showSoil2()
  */
 void showSoil3()
 {
-    showSoil("Pflanze 3", 
-        getValueString(soilResult3.getSoilCondition()), 
-        soilResult3.getValue(),
-        soilResult3.getSoilCondition() == SoilResult::SoilCondition::dry);
+    showSoil("Pflanze 3", &soilResult3 ); 
 }
 
 void showDateTime(const RtcDateTime &dt)
