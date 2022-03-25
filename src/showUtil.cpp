@@ -131,7 +131,7 @@ void showDateTime(const RtcDateTime &dt)
  */
 void showLcd(unsigned int state)
 {
-    Serial.print("start show: ");
+    Serial.print("Start show state: ");
     Serial.println(state);
 
     switch (state)

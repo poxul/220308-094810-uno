@@ -68,23 +68,24 @@ void setup()
   Serial.print(__DATE__);
   Serial.println(__TIME__);
   scanI2C();
-  Serial.println("test i2c done");
+  Serial.println("Test i2c done");
 
   setupLCD();
-  Serial.println("setup lcd done");
+  Serial.println("Setup lcd done");
   setupDioUtil();
-  Serial.println("setup digital io done");
+  Serial.println("Setup digital io done");
   delayMS = dhtM.setup();
-  Serial.println("setup dht22 done");
+  Serial.println("Setup dht22 done");
 
   setupRTC();
+  Serial.println("Setup rtc done");
 
   unsigned long now = millis();
   lastView = now;
   lastMeasurement = now;
 
   // setup done
-  Serial.println("setup done");
+  Serial.println("Setup done");
 }
 
 /**
@@ -93,7 +94,7 @@ void setup()
  */
 void measure()
 {
-  Serial.println("start measure");
+  Serial.println("Measurement loop");
   // read temperature sensor
   dhtM.read(&temperatureResult);
   // read soil moisture 1
@@ -111,14 +112,12 @@ void measure()
  *
  */
 void checkState()
-{
-  Serial.println("start check state");
-  
+{ 
   if (showState >= STATE_MAX)
   {
     showState = STATE_TEMPERATURE;
   }
-  Serial.print("new state ");
+  Serial.print("Current state ");
   Serial.println(showState);
 }
 
@@ -128,7 +127,7 @@ void checkState()
  */
 void show()
 {
-  Serial.println("start show");
+  Serial.println("Show loop");
   // Beep if the button 1 is pressed
   setBuzzer(isButton1());
 
@@ -145,7 +144,7 @@ void show()
   showLcd(showState);
 
   // change view state if button 2 is not pressed
-  if (!isButton2) 
+  if (!isButton2()) 
   {
     showState++;
   }

@@ -16,5 +16,5 @@ void setupLCD(){
   lcd.setCursor(2,0);
   lcd.print("Plant-Support");
   lcd.setCursor(2,1);
-  lcd.print("Version 1.0");
+  lcd.print("Version 1.1");
 }

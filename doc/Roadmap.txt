@@ -211,3 +211,26 @@
 
     1 Platte rechteckig 80 * 92 mm 
     
+
+    Für den Kompletten Körper brauchte man 16 quadratisch Patten.
+
+
+-----------------
+    Funktion der Anzeige
+    - Es werden zyklisch alle Werte angezeigt.
+    - Wenn eine Pflanze trocken ist bleibt die Anzeige für diesen Wert stehen.
+    - Wenn ein für die Bodenfeuchte ein Extremwert ( trocken / wasser ) erreicht wurde Blinkt die Anzeige.
+-----------------
+    Todo 
+    - Einstellung der Zeit
+    - Pumpensteuerung
+    - Wasserbehälterüberwachung
+-----------------
+    -- Befestigung des Bewegungssensors    
+    -- Inbetribnahme der aktuellen Konfiguration
+    -- Umstellung der seriellen Ausgabe auf DebugLog
+
+
+
+
+
