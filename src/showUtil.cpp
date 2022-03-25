@@ -6,13 +6,14 @@
 #include <DHT_U.h>
 #include <RtcDS3231.h>
 
+
 #include "debugLogger.h"
 #include "soilMoisture.h"
 #include "dhtMeasure.h"
 #include "lcdUtil.h"
 #include "rtClock.h"
 #include "showUtil.h"
-#include "rtClock.h"
+
 
 extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
@@ -21,6 +22,10 @@ extern DhtResult temperatureResult;
 extern SoilResult soilResult1;
 extern SoilResult soilResult2;
 extern SoilResult soilResult3;
+
+// rt clock
+extern RtcDS3231<TwoWire> Rtc;
+
 
 /**
  * @brief show temperature on lcd
@@ -45,17 +50,23 @@ void showLcdHumidity()
     lcd.print("Luftfeuchtigkeit");
     lcd.setCursor(4, 1);
     lcd.print(temperatureResult.getHumidity());
-    lcd.print(" %%");
+    lcd.print(" %");
 }
 
-void showSoil(const char *name, const char *text, unsigned int value)
+void showSoil(const char *name, const char *text, unsigned int value, bool blink)
 {
     lcd.setCursor(0, 0);
     lcd.print(name);
     lcd.setCursor(0, 1);
     lcd.print(text);
-    lcd.print(" ");
+    lcd.print(" (");
     lcd.print(value);
+    lcd.print(")");
+    if(blink)
+    {
+        lcd.setCursor(0, 1);
+        lcd.blink_on();
+    }
 }
 
 const char *getValueString(SoilResult::SoilCondition condition)
@@ -81,7 +92,11 @@ const char *getValueString(SoilResult::SoilCondition condition)
  */
 void showSoil1()
 {
-    showSoil("Pflanze 1", getValueString(soilResult1.getSoilCondition()), soilResult1.getValue());
+    
+    showSoil("Pflanze 1", 
+        getValueString(soilResult1.getSoilCondition()), 
+        soilResult1.getValue(),
+        soilResult1.getSoilCondition() == SoilResult::SoilCondition::dry);
 }
 
 /**
@@ -90,7 +105,10 @@ void showSoil1()
  */
 void showSoil2()
 {
-    showSoil("Pflanze 2", getValueString(soilResult2.getSoilCondition()), soilResult2.getValue());
+    showSoil("Pflanze 2", 
+        getValueString(soilResult2.getSoilCondition()), 
+        soilResult2.getValue(),
+        soilResult2.getSoilCondition() == SoilResult::SoilCondition::dry);
 }
 
 /**
@@ -99,7 +117,10 @@ void showSoil2()
  */
 void showSoil3()
 {
-    showSoil("Pflanze 3", getValueString(soilResult3.getSoilCondition()), soilResult3.getValue());
+    showSoil("Pflanze 3", 
+        getValueString(soilResult3.getSoilCondition()), 
+        soilResult3.getValue(),
+        soilResult3.getSoilCondition() == SoilResult::SoilCondition::dry);
 }
 
 void showDateTime(const RtcDateTime &dt)
@@ -133,7 +154,8 @@ void showLcd(unsigned int state)
 {
     Serial.print("Start show state: ");
     Serial.println(state);
-
+    lcd.clear();
+    lcd.blink_off();
     switch (state)
     {
     case STATE_TEMPERATURE:
@@ -152,7 +174,7 @@ void showLcd(unsigned int state)
         showSoil3();
         break;
     case STATE_DATE:
-        showSoil3();
+        showDateTime(Rtc.GetDateTime());
         break;
 
     default:

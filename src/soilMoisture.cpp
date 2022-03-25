@@ -66,6 +66,9 @@ void SoilMoisture::read(SoilResult *result)
     soilMoistureValue = analogRead(analogInput); // set the humidity value read by soil humidity sensor to soilMoistureValue
     result->setValue(soilMoistureValue);
     int idx = ((soilMoistureValue - SOIL_MOISTURE_MIN) + (step / 2)) / step;
+    Serial.print("Soil ");
+    Serial.print(analogInput);
+    Serial.print("= ");
     switch (idx)
     {
     case 0:
@@ -85,6 +88,7 @@ void SoilMoisture::read(SoilResult *result)
         result->setCondition(SoilResult::SoilCondition::dry);
         break;
     }
+    Serial.print(" value: ");
     Serial.print(soilMoistureValue);
     Serial.println(F(" x"));
 }

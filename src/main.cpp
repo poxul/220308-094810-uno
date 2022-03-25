@@ -53,6 +53,25 @@ unsigned long lastView;
 unsigned int showState = 0;
 
 /**
+ * @brief measurement called every 10 seconds
+ *
+ */
+void measure()
+{
+  Serial.println("Measurement loop");
+  // read temperature sensor
+  dhtM.read(&temperatureResult);
+  // read soil moisture 1
+  soil1.read(&soilResult1);
+  // read soil moisture 2
+  soil2.read(&soilResult2);
+  // read soil moisture 3
+  soil3.read(&soilResult3);
+  // check rtc
+  checkRTC();
+}
+
+/**
  * @brief arduino setup call
  *
  */
@@ -64,7 +83,7 @@ void setup()
   } // Wait for Serial to start
   delay(750);
 
-  Serial.print("compiled: ");
+  Serial.print("Compiled: ");
   Serial.print(__DATE__);
   Serial.println(__TIME__);
   scanI2C();
@@ -83,28 +102,9 @@ void setup()
   unsigned long now = millis();
   lastView = now;
   lastMeasurement = now;
-
+  measure();
   // setup done
   Serial.println("Setup done");
-}
-
-/**
- * @brief measurement called every 10 seconds
- *
- */
-void measure()
-{
-  Serial.println("Measurement loop");
-  // read temperature sensor
-  dhtM.read(&temperatureResult);
-  // read soil moisture 1
-  soil1.read(&soilResult1);
-  // read soil moisture 2
-  soil2.read(&soilResult2);
-  // read soil moisture 3
-  soil3.read(&soilResult3);
-  // check rtc
-  checkRTC();
 }
 
 /**
