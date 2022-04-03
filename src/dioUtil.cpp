@@ -13,6 +13,11 @@ void setupDioUtil(){
   pinMode(MOTOR_1, OUTPUT); // water pump one
   pinMode(MOTOR_2, OUTPUT); // water pump two
   pinMode(MOTOR_3, OUTPUT); // water pump three
+
+  digitalWrite(MOTOR_1,1); // motor 1 off
+  digitalWrite(MOTOR_2,1); // motor 2 off
+  digitalWrite(MOTOR_3,1); // motor 3 off
+  
 }
 
 bool isButton(int digIn){

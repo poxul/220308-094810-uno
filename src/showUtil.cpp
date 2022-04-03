@@ -85,7 +85,7 @@ const char *getValueString(SoilResult::SoilCondition condition)
 }
 
 
-void showSoil(char* txt, SoilResult* soilResult){
+void showSoilResult(const char* txt, SoilResult* soilResult){
     showSoil(txt, 
         getValueString(soilResult->getSoilCondition()), 
         soilResult->getValue(),
@@ -97,7 +97,7 @@ void showSoil(char* txt, SoilResult* soilResult){
  */
 void showSoil1()
 {    
-    showSoil("Pflanze 1", &soilResult1);
+    showSoilResult("Pflanze 1", &soilResult1);
 }
 
 /**
@@ -106,7 +106,7 @@ void showSoil1()
  */
 void showSoil2()
 {
-    showSoil("Pflanze 2", &soilResult2); 
+    showSoilResult("Pflanze 2", &soilResult2); 
 }
 
 /**
@@ -115,7 +115,7 @@ void showSoil2()
  */
 void showSoil3()
 {
-    showSoil("Pflanze 3", &soilResult3 ); 
+    showSoilResult("Pflanze 3", &soilResult3 ); 
 }
 
 void showDateTime(const RtcDateTime &dt)
