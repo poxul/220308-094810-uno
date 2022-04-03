@@ -2,12 +2,17 @@
 #include <Wire.h> 
 
 #include "dioUtil.h"
+#include "ioConstants.h"
 
 void setupDioUtil(){
-  pinMode(MOTION, INPUT);   // initialize digital pin button as an input.
-  pinMode(BUTTON_1, INPUT); // initialize digital pin button as an input.
-  pinMode(BUTTON_2, INPUT); // initialize digital pin button as an input.
-  pinMode(BUZZER, OUTPUT);  //The digital port 11 is set to the output port
+  pinMode(MOTION, INPUT);   // motion sensor
+  pinMode(BUTTON_1, INPUT); // button one
+  pinMode(BUTTON_2, INPUT); // button two
+  pinMode(BUZZER, OUTPUT);  // buzzer
+  pinMode(WATER_LEVEL, INPUT);  // water level sensot
+  pinMode(MOTOR_1, OUTPUT); // water pump one
+  pinMode(MOTOR_2, OUTPUT); // water pump two
+  pinMode(MOTOR_3, OUTPUT); // water pump three
 }
 
 bool isButton(int digIn){
@@ -24,7 +29,7 @@ bool isButton1(){
 }
 
 bool isButton2(){
-  return isButton(BUTTON_2);
+  return isButton(BUTTON_1);
 }
 
 bool isMotion(){
@@ -41,4 +46,12 @@ void setBuzzer(bool on){
   } else {
     noTone(BUZZER);//Power amplifier module no beep
   }
+}
+
+bool isWaterLevelOk(){
+  // Motion detection
+  int m = digitalRead(WATER_LEVEL);
+  Serial.print(F("Water level state: "));
+  Serial.println(m);
+  return m == HIGH;  
 }
