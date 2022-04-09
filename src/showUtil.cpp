@@ -184,8 +184,11 @@ void lcdAlarm(const char *txt, int id, const char *action)
     lcd.print(txt);
     lcd.setCursor(0, 1);
     lcd.print(action);
-    lcd.setCursor(14, 0);
-    lcd.print(id);
+    if( id > 0)
+    {
+        lcd.setCursor(14, 0);
+        lcd.print(id);
+    }
     lcd.setCursor(14, 0);
     lcd.blink_on();
 
@@ -199,6 +202,11 @@ void showLcdAlarm(int alarm)
 {
     Serial.print("Alarm state: ");
     Serial.println(alarm);
-    lcd.clear();
-    lcdAlarm("Pflanze",alarm, "bewaessern!");
+        lcd.clear();
+    if( alarm < 4){
+        lcdAlarm("Pflanze",alarm, "bewaessern!");
+    } else if( alarm == 4 )
+    {
+        lcdAlarm("Wasser",0, "auffuellen!");
+    }
 }

@@ -3,3 +3,4 @@ bool isButton2();
 bool isMotion();
 void setupDioUtil();
 void setBuzzer(bool on);
+bool isWaterLevelOk();

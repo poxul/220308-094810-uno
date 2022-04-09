@@ -74,19 +74,24 @@ void measure()
   checkRTC();
 }
 
-void checkAlarm(){
+void checkAlarm()
+{
   alarmMode = 0;
-  if( soilResult1.isValid() && soilResult1.getSoilCondition() == SoilResult::SoilCondition::dry )
+  if (!isWaterLevelOk())
+  {
+    alarmMode = 4;
+  }
+  else if (soilResult1.isValid() && soilResult1.getSoilCondition() == SoilResult::SoilCondition::dry)
   {
     alarmMode = 1;
-  } 
-  else if( soilResult2.isValid() && soilResult2.getSoilCondition() == SoilResult::SoilCondition::dry )
-  {
-    alarmMode = 2;  
   }
-  else if( soilResult3.isValid() && soilResult3.getSoilCondition() == SoilResult::SoilCondition::dry )
+  else if (soilResult2.isValid() && soilResult2.getSoilCondition() == SoilResult::SoilCondition::dry)
   {
-    alarmMode = 3;  
+    alarmMode = 2;
+  }
+  else if (soilResult3.isValid() && soilResult3.getSoilCondition() == SoilResult::SoilCondition::dry)
+  {
+    alarmMode = 3;
   }
 }
 
@@ -178,11 +183,11 @@ void show()
   else if (alarmMode != 0)
   {
     // handle alarm mode
-    if(lastAlarm != alarmMode)
+    if (lastAlarm != alarmMode)
     {
       showLcdAlarm(alarmMode);
     }
-  } 
+  }
   else
   {
     // show current values
@@ -195,8 +200,6 @@ void show()
     showLcd(showState);
   }
   lastAlarm = alarmMode;
-
-
 }
 
 /**

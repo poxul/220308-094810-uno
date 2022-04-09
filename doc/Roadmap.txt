@@ -257,3 +257,6 @@ Im Alarm Modus findet keine Abschaltung der Beleuchtung statt.
 
 Modus: Anzeige, Eingabe, Alarme
 
+
+SoilResult um den Namen der Pflanze erweitern.
+
