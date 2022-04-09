@@ -19,7 +19,7 @@ public:
 
     int getValue();
     SoilCondition getSoilCondition();
-    bool setValid(bool ok);
+    void setValid(bool ok);
     bool isValid();
 
 private:

@@ -14,3 +14,5 @@ enum ShowState
   STATE_TEST_PUMP_3,
   STATE_MAX
 };
+
+void showLcdAlarm(int alarm);

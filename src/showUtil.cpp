@@ -24,7 +24,6 @@ extern SoilResult soilResult3;
 // rt clock
 extern RtcDS3231<TwoWire> Rtc;
 
-
 /**
  * @brief show temperature on lcd
  *
@@ -60,7 +59,7 @@ void showSoil(const char *name, const char *text, unsigned int value, bool blink
     lcd.print(" (");
     lcd.print(value);
     lcd.print(")");
-    if(blink)
+    if (blink)
     {
         lcd.setCursor(0, 1);
         lcd.blink_on();
@@ -84,19 +83,19 @@ const char *getValueString(SoilResult::SoilCondition condition)
     }
 }
 
-
-void showSoilResult(const char* txt, SoilResult* soilResult){
-    showSoil(txt, 
-        getValueString(soilResult->getSoilCondition()), 
-        soilResult->getValue(),
-        soilResult->getSoilCondition() == SoilResult::SoilCondition::dry);
+void showSoilResult(const char *txt, SoilResult *soilResult)
+{
+    showSoil(txt,
+             getValueString(soilResult->getSoilCondition()),
+             soilResult->getValue(),
+             soilResult->getSoilCondition() == SoilResult::SoilCondition::dry);
 }
 /**
  * @brief show soil moisture sensor 1
  *
  */
 void showSoil1()
-{    
+{
     showSoilResult("Pflanze 1", &soilResult1);
 }
 
@@ -106,7 +105,7 @@ void showSoil1()
  */
 void showSoil2()
 {
-    showSoilResult("Pflanze 2", &soilResult2); 
+    showSoilResult("Pflanze 2", &soilResult2);
 }
 
 /**
@@ -115,7 +114,7 @@ void showSoil2()
  */
 void showSoil3()
 {
-    showSoilResult("Pflanze 3", &soilResult3 ); 
+    showSoilResult("Pflanze 3", &soilResult3);
 }
 
 void showDateTime(const RtcDateTime &dt)
@@ -175,4 +174,31 @@ void showLcd(unsigned int state)
     default:
         break;
     }
+}
+
+void lcdAlarm(const char *txt, int id, const char *action)
+{
+    Serial.print("Show alarm: ");
+    Serial.println(txt);
+    lcd.setCursor(0, 0);
+    lcd.print(txt);
+    lcd.setCursor(0, 1);
+    lcd.print(action);
+    lcd.setCursor(14, 0);
+    lcd.print(id);
+    lcd.setCursor(14, 0);
+    lcd.blink_on();
+
+}
+
+/**
+ * @brief show alarm state
+ *
+ */
+void showLcdAlarm(int alarm)
+{
+    Serial.print("Alarm state: ");
+    Serial.println(alarm);
+    lcd.clear();
+    lcdAlarm("Pflanze",alarm, "bewaessern!");
 }

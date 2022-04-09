@@ -34,7 +34,7 @@ bool isButton1(){
 }
 
 bool isButton2(){
-  return isButton(BUTTON_1);
+  return isButton(BUTTON_2);
 }
 
 bool isMotion(){

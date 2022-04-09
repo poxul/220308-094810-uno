@@ -52,7 +52,8 @@ unsigned long lastView;
 
 unsigned int showState = 0;
 bool editMode = false;
-bool alarmMode = false;
+int alarmMode = 0;
+int lastAlarm = 0;
 
 /**
  * @brief measurement called every 10 seconds
@@ -74,7 +75,19 @@ void measure()
 }
 
 void checkAlarm(){
-
+  alarmMode = 0;
+  if( soilResult1.isValid() && soilResult1.getSoilCondition() == SoilResult::SoilCondition::dry )
+  {
+    alarmMode = 1;
+  } 
+  else if( soilResult2.isValid() && soilResult2.getSoilCondition() == SoilResult::SoilCondition::dry )
+  {
+    alarmMode = 2;  
+  }
+  else if( soilResult3.isValid() && soilResult3.getSoilCondition() == SoilResult::SoilCondition::dry )
+  {
+    alarmMode = 3;  
+  }
 }
 
 /**
@@ -144,7 +157,7 @@ void show()
   // Beep if the button 2 is pressed ( ok, run, step )
   setBuzzer(b2);
 
-  // handle mode
+  // check edit mode
   editMode = b1 && b2;
 
   // handle backlight
@@ -160,18 +173,30 @@ void show()
   // handle state
   if (editMode)
   {
+    // handle edit mode
   }
+  else if (alarmMode != 0)
+  {
+    // handle alarm mode
+    if(lastAlarm != alarmMode)
+    {
+      showLcdAlarm(alarmMode);
+    }
+  } 
   else
   {
+    // show current values
     showState++;
     if (showState >= STATE_SHOW)
     {
       showState = STATE_SHOW_TEMPERATURE;
     }
+    // show on lcd
+    showLcd(showState);
   }
+  lastAlarm = alarmMode;
 
-  // show on lcd
-  showLcd(showState);
+
 }
 
 /**
@@ -188,6 +213,7 @@ void loop()
   {
     // read new values
     measure();
+    checkAlarm();
     lastMeasurement = now;
   }
 
