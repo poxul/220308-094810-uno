@@ -153,22 +153,22 @@ void showLcd(unsigned int state)
     lcd.blink_off();
     switch (state)
     {
-    case STATE_TEMPERATURE:
+    case STATE_SHOW_TEMPERATURE:
         showLcdTemperature();
         break;
-    case STATE_HUMIDITY:
+    case STATE_SHOW_HUMIDITY:
         showLcdHumidity();
         break;
-    case STATE_SOIL_SENSOR_1:
+    case STATE_SHOW_SOIL_SENSOR_1:
         showSoil1();
         break;
-    case STATE_SOIL_SENSOR_2:
+    case STATE_SHOW_SOIL_SENSOR_2:
         showSoil2();
         break;
-    case STATE_SOIL_SENSOR_3:
+    case STATE_SHOW_SOIL_SENSOR_3:
         showSoil3();
         break;
-    case STATE_DATE:
+    case STATE_SHOW_DATE:
         showDateTime(Rtc.GetDateTime());
         break;
 

@@ -25,6 +25,16 @@ extern DebugLogger logger;
 
 SoilResult::SoilResult() {}
 
+void SoilResult::setValid(bool ok)
+{
+    valid = ok;
+}
+
+bool SoilResult::isValid()
+{
+    return valid;
+}
+
 int SoilResult::getValue()
 {
     return value;
@@ -69,6 +79,7 @@ void SoilMoisture::read(SoilResult *result)
     Serial.print("Soil ");
     Serial.print(analogInput);
     Serial.print("= ");
+    result->setValid(enabled);
     switch (idx)
     {
     case 0:
@@ -91,4 +102,14 @@ void SoilMoisture::read(SoilResult *result)
     Serial.print(" value: ");
     Serial.print(soilMoistureValue);
     Serial.println(F(" x"));
+}
+
+void SoilMoisture::setEnabled(bool on)
+{
+    enabled = on;
+}
+
+bool SoilMoisture::isEnabled()
+{
+    return enabled;
 }

@@ -51,6 +51,8 @@ unsigned long lastMeasurement;
 unsigned long lastView;
 
 unsigned int showState = 0;
+bool editMode = false;
+bool alarmMode = false;
 
 /**
  * @brief measurement called every 10 seconds
@@ -69,6 +71,10 @@ void measure()
   soil3.read(&soilResult3);
   // check rtc
   checkRTC();
+}
+
+void checkAlarm(){
+
 }
 
 /**
@@ -99,6 +105,10 @@ void setup()
   setupRTC();
   Serial.println("Setup rtc done");
 
+  soil1.setEnabled(true);
+  soil2.setEnabled(true);
+  soil3.setEnabled(true);
+
   unsigned long now = millis();
   lastView = now;
   lastMeasurement = now;
@@ -112,10 +122,10 @@ void setup()
  *
  */
 void checkState()
-{ 
+{
   if (showState >= STATE_MAX)
   {
-    showState = STATE_TEMPERATURE;
+    showState = STATE_SHOW_TEMPERATURE;
   }
   Serial.print("Current state ");
   Serial.println(showState);
@@ -128,11 +138,17 @@ void checkState()
 void show()
 {
   Serial.println("Show loop");
-  // Beep if the button 1 is pressed
-  setBuzzer(isButton1());
+  bool b1 = isButton1();
+  bool b2 = isButton2();
 
-  // check motion
-  if (isMotion())
+  // Beep if the button 2 is pressed ( ok, run, step )
+  setBuzzer(b2);
+
+  // handle mode
+  editMode = b1 && b2;
+
+  // handle backlight
+  if (editMode || isMotion())
   {
     lcd.backlight();
   }
@@ -140,15 +156,22 @@ void show()
   {
     lcd.noBacklight();
   }
-  // show on lcd
-  showLcd(showState);
 
-  // change view state if button 2 is not pressed
-  if (!isButton2()) 
+  // handle state
+  if (editMode)
+  {
+  }
+  else
   {
     showState++;
+    if (showState >= STATE_SHOW)
+    {
+      showState = STATE_SHOW_TEMPERATURE;
+    }
   }
 
+  // show on lcd
+  showLcd(showState);
 }
 
 /**

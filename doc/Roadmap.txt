@@ -231,6 +231,29 @@
     -- Umstellung der seriellen Ausgabe auf DebugLog
 
 
+Umschaltung Anzeige/Eingabe Modus: Taste 1+2
+Weiter: Taste 1
+Ok: Taste 2
+Tippbetrieb: Taste 2
 
+Anzeige des Modus: Cursor blinkt bei Eingabe-Modus.
+Anzeige run (Taste2 im Eingabe Modus) Cursor blinkt anders oder eigenes Zeichen.
 
+Anzeigen:
+    Temperatur, Luftfeugchtigkeit, Bodenfeuchte 1-3, Datum und Uhrzeit
+Alarme:
+    kein Wasser, Bodenfeuchte Trocken 1- 3 
+Eingaben:
+    Motor 1-3 manuel start / stop durch tippen von Taste 2
+    Ein- / Ausschalten der Planzenüberwachung 1-3
+
+Im Anzeige-Modus wird die Anzeige automatisch nach x Sekunden gewechselt.
+Im Edit-Modus erfolgt keine Abschaltung der Beleuchtung.
+Im Edit-Modus wird keine automatische Bewässerung durchgeführt.
+Im Edit-Modus werden Keine Alarme angezeigt
+Alarme werden invertiert angezeigt.
+Im Alarm Modus findet die automatische Bewässerung statt.
+Im Alarm Modus findet keine Abschaltung der Beleuchtung statt.
+
+Modus: Anzeige, Eingabe, Alarme
 
