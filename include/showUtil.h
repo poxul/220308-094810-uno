@@ -16,3 +16,4 @@ enum ShowState
 };
 
 void showLcdAlarm(int alarm);
+void showLcdEdit(int edit, bool run);

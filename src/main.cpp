@@ -51,9 +51,13 @@ unsigned long lastMeasurement;
 unsigned long lastView;
 
 unsigned int showState = 0;
-bool editMode = false;
+unsigned int lastShowState = 0;
+int editMode = 0;
+int lastEditMode = 0;
 int alarmMode = 0;
 int lastAlarm = 0;
+
+bool toggleEditMode = false;
 
 /**
  * @brief measurement called every 10 seconds
@@ -136,34 +140,42 @@ void setup()
 }
 
 /**
- * @brief calculate next view state
- *
- */
-void checkState()
-{
-  if (showState >= STATE_MAX)
-  {
-    showState = STATE_SHOW_TEMPERATURE;
-  }
-  Serial.print("Current state ");
-  Serial.println(showState);
-}
-
-/**
  * @brief show state called every 3 seconds
  *
  */
 void show()
 {
   Serial.println("Show loop");
-  bool b1 = isButton1();
-  bool b2 = isButton2();
-
-  // Beep if the button 2 is pressed ( ok, run, step )
-  setBuzzer(b2);
+  bool b1 = isButton1(); // next
+  bool b2 = isButton2(); // toggle
+  bool buzz = false;
 
   // check edit mode
-  editMode = b1 && b2;
+  if (b1 && b2)
+  {
+    if (!toggleEditMode)
+    {
+      if (editMode == 0)
+      {
+        editMode = 1;
+        lastShowState = showState + 1;
+        buzz = true;
+      }
+      else
+      {
+        editMode = 0;
+      }
+      toggleEditMode = true;
+    }
+    b1 = false;
+    b2 = false;
+  }
+  else
+  {
+    toggleEditMode = false;
+  }
+
+  // Beep
 
   // handle backlight
   if (editMode || isMotion())
@@ -176,9 +188,26 @@ void show()
   }
 
   // handle state
-  if (editMode)
+  if (editMode != 0)
   {
     // handle edit mode
+    if (b1)
+    {
+      editMode++;
+    }
+    if (editMode > 3)
+    {
+      editMode = 1;
+    }
+    bool runMode = isPumpRunning(editMode);
+    if (b2)
+    {
+      runMode = !runMode;
+    }
+    runMode &= isWaterLevelOk();
+
+    showLcdEdit(editMode, runMode);
+    setPumpRunning(editMode, runMode);
   }
   else if (alarmMode != 0)
   {
@@ -197,9 +226,18 @@ void show()
       showState = STATE_SHOW_TEMPERATURE;
     }
     // show on lcd
-    showLcd(showState);
+    if (lastShowState != showState)
+    {
+      showLcd(showState);
+      lastShowState = showState;
+    }
   }
+
   lastAlarm = alarmMode;
+  lastShowState = showState;
+  lastEditMode = editMode;
+
+  setBuzzer(buzz);
 }
 
 /**
@@ -221,7 +259,6 @@ void loop()
   }
 
   // check for priorized values
-  checkState();
   if ((now - lastView) > 2000)
   {
     // show result

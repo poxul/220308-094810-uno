@@ -260,3 +260,11 @@ Modus: Anzeige, Eingabe, Alarme
 
 SoilResult um den Namen der Pflanze erweitern.
 
+
+Anzeige
+
+
+Zeile 1: Modus (Anzeige, Eingagabe) / Trenner / Origin ( Planze, Motor...) / Index
+Zeile 2: Alarm ( 1,2,3,W ) // Status
+
+

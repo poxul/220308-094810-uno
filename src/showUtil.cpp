@@ -194,6 +194,23 @@ void lcdAlarm(const char *txt, int id, const char *action)
 
 }
 
+void lcdEdit(const char *txt, int id, const char *action)
+{
+    Serial.print("Show edit: ");
+    Serial.println(txt);
+    lcd.setCursor(0, 0);
+    lcd.print(txt);
+    lcd.setCursor(0, 1);
+    lcd.print(action);
+    if( id > 0)
+    {
+        lcd.setCursor(14, 0);
+        lcd.print(id);
+    }
+    lcd.setCursor(14, 1);
+    lcd.blink_on();
+}
+
 /**
  * @brief show alarm state
  *
@@ -202,11 +219,34 @@ void showLcdAlarm(int alarm)
 {
     Serial.print("Alarm state: ");
     Serial.println(alarm);
-        lcd.clear();
+    lcd.clear();
     if( alarm < 4){
         lcdAlarm("Pflanze",alarm, "bewaessern!");
     } else if( alarm == 4 )
     {
         lcdAlarm("Wasser",0, "auffuellen!");
+    }
+}
+
+/**
+ * @brief show alarm state
+ *
+ */
+void showLcdEdit(int edit, bool run)
+{
+    Serial.print("Edit state: ");
+    Serial.println(edit);
+    lcd.clear();
+    if( edit < 4){
+        if( run ){
+            lcdEdit("Pumpe",edit, "laeuft!");
+        } 
+        else
+        {
+            lcdEdit("Pumpe",edit, "angehalten!");
+        }
+    } else if( edit >= 4 )
+    {
+        lcdEdit("Geraet",edit, "unbekannt!");
     }
 }

@@ -4,3 +4,5 @@ bool isMotion();
 void setupDioUtil();
 void setBuzzer(bool on);
 bool isWaterLevelOk();
+bool isPumpRunning( int idx);
+void setPumpRunning(int idx, bool value);
