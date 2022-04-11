@@ -268,3 +268,34 @@ Zeile 1: Modus (Anzeige, Eingagabe) / Trenner / Origin ( Planze, Motor...) / Ind
 Zeile 2: Alarm ( 1,2,3,W ) // Status
 
 
+Für die Anzeige der Texte Zeile 1 bleiben 16 - 2 ( links ) - 2 ( rechts ) = 12 Zeichen
+Für die Anzeige der Werte bleiben 14 Zeichen.
+
+    123456789012
+  x ------------ I
+    12345678901234
+  A --------------
+
+Datum:
+    27/04/2022
+    13:30:55 
+Temperatur:
+    Temperatur
+        23 'C
+Luftfeugchtigkeit:
+    Luftfeuchte
+        44.3 %
+Bodenfeuchte (1,2,3):
+    Pflanze 1
+        trocken
+Warnung Wasser auffüllen:
+    Wasser
+        auffuellen!
+
+Manuelle Bedinung der Pumpen:
+    Pumpe 1
+        lauft
+
+Einschalten der automatischen Bewässerung:
+    Bewaesserung 1
+         ein

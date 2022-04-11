@@ -21,16 +21,22 @@ void setupLCD()
   lcd.backlight();
 }
 
-void lcdShowOrigin(int idx)
+void lcdShowOrigin(const char * txt)
 {
-  lcd.setCursor(1, 0);
-  lcd.print(origin[idx]);
+  lcd.setCursor(2, 0);
+  lcd.print(txt);
 }
 
 void lcdShowID(int value)
 {
   lcd.setCursor(15, 0);
-  lcd.print(value);
+  if( value > 0 ){
+    lcd.print(value);
+  } 
+  else 
+  {
+    lcd.print(' ');
+  }
 }
 
 void lcdShowAlarm(int value)
@@ -59,4 +65,10 @@ void lcdShowMode(int mode)
   {
     lcd.print('e'); // edit mode
   }
+}
+
+void lcdShowValue(const char * txt)
+{
+  lcd.setCursor(2, 1);
+  lcd.print(txt);
 }
