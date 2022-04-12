@@ -6,7 +6,6 @@
 #include <DHT_U.h>
 #include <RtcDS3231.h>
 
-#include "debugLogger.h"
 #include "soilMoisture.h"
 #include "dhtMeasure.h"
 #include "lcdUtil.h"
@@ -14,15 +13,9 @@
 #include "showUtil.h"
 #include "textUtil.h"
 
-extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
 extern DhtResult temperatureResult;
-
-extern SoilResult soilResult1;
-extern SoilResult soilResult2;
-extern SoilResult soilResult3;
-
-// rt clock
+extern SoilResult soilResult[];
 extern RtcDS3231<TwoWire> Rtc;
 
 /**
@@ -113,25 +106,23 @@ void showLcd(unsigned int state)
     case STATE_SHOW_SOIL_SENSOR_1:
         idx = 1;
         lcdShowOriginIdx(ORIGIN_PLANT);
-        showSoilResult(&soilResult1);
+        showSoilResult(&soilResult[0]);
         break;
     case STATE_SHOW_SOIL_SENSOR_2:
         idx = 2;
         lcdShowOriginIdx(ORIGIN_PLANT);
-        showSoilResult(&soilResult2);
+        showSoilResult(&soilResult[1]);
         break;
     case STATE_SHOW_SOIL_SENSOR_3:
         idx = 3;
         lcdShowOriginIdx(ORIGIN_PLANT);
-        showSoilResult(&soilResult3);
+        showSoilResult(&soilResult[2]);
         break;
     case STATE_SHOW_DATE:
         showDateTime(Rtc.GetDateTime());
         break;
-
     default:
         break;
     }
-
     lcdShowID(idx);
 }

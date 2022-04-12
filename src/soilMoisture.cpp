@@ -6,15 +6,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "debugLogger.h"
 #include "soilMoisture.h"
 
 #define SOIL_MOISTURE_MIN 285 // 0% min value -> sensor is in water
 #define SOIL_MOISTURE_MAX 591 // 100% max value -> sensor is in air
 
 #define NUM_STEPS 3
-
-extern DebugLogger logger;
 
 SoilResult::SoilResult() {}
 

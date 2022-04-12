@@ -22,4 +22,6 @@ const char text[TEXT_MAX][MAX_TEXT_STRING_SIZE] =
 		"auffuellen!",
 		"laeuft!",
 		"angehalten!",
-		"unbekannt!"};
+		"unbekannt!", 
+		"aktiv",
+		"inaktiv"};

@@ -1,11 +1,7 @@
 #include <Arduino.h>
-
 #include <Wire.h> 
 
-#include "debugLogger.h"
 #include "dhtMeasure.h"
-
-extern DebugLogger logger;
 
 DhtResult::DhtResult(){}
 

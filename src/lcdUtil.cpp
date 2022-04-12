@@ -1,12 +1,9 @@
 #include <Arduino.h>
-
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-#include "debugLogger.h"
 #include "text.h"
 
-extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
 
 int alarmValue = -1;
@@ -24,16 +21,21 @@ void setupLCD()
   lcd.backlight();
 }
 
-void lcdShowOriginIdx(int idx)
-{
-  lcd.setCursor(2, 0);
-  lcd.print(origin[idx]);
-}
 
 void lcdShowOrigin(const char *txt)
 {
   lcd.setCursor(2, 0);
   lcd.print(txt);
+  size_t len = strlen(txt);
+  for (; len < 12; len++)
+  {
+    lcd.print('-');
+  }
+}
+
+void lcdShowOriginIdx(int idx)
+{
+  lcdShowOrigin(origin[idx]);
 }
 
 void lcdShowID(int value)
@@ -45,7 +47,7 @@ void lcdShowID(int value)
   }
   else
   {
-    lcd.print(' ');
+    lcd.print('*');
   }
 }
 
@@ -95,6 +97,11 @@ void lcdShowValue(const char *txt)
 {
   lcd.setCursor(2, 1);
   lcd.print(txt);
+  size_t len = strlen(txt);
+  for (; len < 12; len++)
+  {
+    lcd.print(' ');
+  }
 }
 
 void lcdShowSoilResult(int idx, int value)

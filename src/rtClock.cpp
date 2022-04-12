@@ -1,8 +1,6 @@
 #include <Arduino.h>
-
 #include <Wire.h>
 
-#include "debugLogger.h"
 #include "rtClock.h"
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))

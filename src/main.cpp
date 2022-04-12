@@ -1,12 +1,10 @@
 #include <Arduino.h>
-
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
 #include <DHT_U.h>
 #include <RtcDS3231.h>
 
-#include "debugLogger.h"
 #include "i2cHelpers.h"
 #include "soilMoisture.h"
 #include "dioUtil.h"
@@ -25,8 +23,6 @@
 #define SOIL_MOISTURE_2 A1
 #define SOIL_MOISTURE_3 A2
 
-DebugLogger logger;
-
 uint32_t delayMS;
 
 // temperature
@@ -38,12 +34,17 @@ DhtResult temperatureResult;
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 // soil moisture
-SoilMoisture soil1(SOIL_MOISTURE_1); // soil moisture sensor 1
-SoilResult soilResult1;
-SoilMoisture soil2(SOIL_MOISTURE_2); // soil moisture sensor 1
-SoilResult soilResult2;
-SoilMoisture soil3(SOIL_MOISTURE_3); // soil moisture sensor 1
-SoilResult soilResult3;
+SoilResult soilResult[3] =
+    {
+        SoilResult(),
+        SoilResult(),
+        SoilResult()};
+
+SoilMoisture soil[3] =
+    {
+        SoilMoisture(SOIL_MOISTURE_1),
+        SoilMoisture(SOIL_MOISTURE_2),
+        SoilMoisture(SOIL_MOISTURE_3)};
 
 // rt clock
 RtcDS3231<TwoWire> Rtc(Wire);
@@ -68,14 +69,23 @@ void measure()
   Serial.println("Measurement loop");
   // read temperature sensor
   dhtM.read(&temperatureResult);
-  // read soil moisture 1
-  soil1.read(&soilResult1);
-  // read soil moisture 2
-  soil2.read(&soilResult2);
-  // read soil moisture 3
-  soil3.read(&soilResult3);
+  // read soil moisture
+  for (size_t i = 0; i < 3; i++)
+  {
+    soil[i].read(&soilResult[i]);
+  }
   // check rtc
   checkRTC();
+}
+
+bool isPlantActive(int idx)
+{
+  return soil[idx].isEnabled();
+}
+
+void setPlantActive(int idx, bool active)
+{
+  soil[idx].setEnabled(active);
 }
 
 void checkAlarm()
@@ -85,17 +95,13 @@ void checkAlarm()
   {
     alarmMode = 4;
   }
-  else if (soilResult1.isValid() && soilResult1.getSoilCondition() == SoilResult::SoilCondition::dry)
+
+  for (size_t i = 0; i < 3; i++)
   {
-    alarmMode = 1;
-  }
-  else if (soilResult2.isValid() && soilResult2.getSoilCondition() == SoilResult::SoilCondition::dry)
-  {
-    alarmMode = 2;
-  }
-  else if (soilResult3.isValid() && soilResult3.getSoilCondition() == SoilResult::SoilCondition::dry)
-  {
-    alarmMode = 3;
+    if (soilResult[i].isValid() && soilResult[i].getSoilCondition() == SoilResult::SoilCondition::dry)
+    {
+      alarmMode = i + 1;
+    }
   }
 }
 
@@ -127,9 +133,10 @@ void setup()
   setupRTC();
   Serial.println("Setup rtc done");
 
-  soil1.setEnabled(true);
-  soil2.setEnabled(true);
-  soil3.setEnabled(true);
+  for (size_t i = 0; i < 3; i++)
+  {
+    soil[i].setEnabled(true);
+  }
 
   unsigned long now = millis();
   lastView = now;
@@ -195,30 +202,57 @@ void show()
     {
       editMode++;
     }
-    if (editMode > 3)
+    if (editMode > 6)
     {
       editMode = 1;
     }
-    // edit mode run pump manual
-    bool runMode = isPumpRunning(editMode);
-    if (b2)
+
+    if (editMode <= 3) // pumps
     {
-      runMode = !runMode;
+      // edit mode run pump manual
+      bool runMode = isPumpRunning(editMode);
+      if (b2)
+      {
+        runMode = !runMode;
+      }
+      runMode &= isWaterLevelOk();
+      // show to lcd
+      lcdShowOriginIdx(ORIGIN_PUMP);
+      lcdShowID(editMode);
+      if (runMode)
+      {
+        lcdShowStateIdx(TEXT_RUNNING);
+      }
+      else
+      {
+        lcdShowStateIdx(TEXT_STOPPED);
+      }
+      // start / stop hardware
+      setPumpRunning(editMode, runMode);
     }
-    runMode &= isWaterLevelOk();
-    // show to lcd
-    lcdShowOriginIdx(ORIGIN_PUMP);
-    lcdShowID(editMode);
-    if (runMode)
+    else if (editMode <= 6) // switch plants on and off
     {
-      lcdShowStateIdx(TEXT_RUNNING);
+      // edit mode run pump manual
+      bool active = isPlantActive(editMode - 3);
+      if (b2)
+      {
+        active = !active;
+      }
+
+      // show to lcd
+      lcdShowOriginIdx(ORIGIN_PLANT);
+      lcdShowID(editMode - 3);
+      if (active)
+      {
+        lcdShowStateIdx(TEXT_ACTIVE);
+      }
+      else
+      {
+        lcdShowStateIdx(TEXT_DISABLED);
+      }
+      // start / stop hardware
+      setPlantActive(editMode - 3, active);
     }
-    else
-    {
-      lcdShowStateIdx(TEXT_STOPPED);
-    }
-    // start / stop hardware
-    setPumpRunning(editMode, runMode);
   }
   else
   {
@@ -269,7 +303,4 @@ void loop()
     show();
     lastView = now;
   }
-
-  // debug out to serial
-  logger.printAllWithSerial();
 }
