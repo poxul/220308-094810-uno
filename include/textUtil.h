@@ -12,8 +12,8 @@ enum OriginText
 enum ValueText
 {
 	TEXT_DRY,
-	TEXT_HUMID,
 	TEXT_OK,
+	TEXT_HUMID,
 	TEXT_WET,
 	TEXT_X,
 	TEXT_WATERING,

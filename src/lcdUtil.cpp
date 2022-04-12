@@ -70,7 +70,8 @@ void lcdShowAlarm(int value)
 
 void lcdShowMode(int mode)
 {
-  if( modeValue != mode ){
+  if (modeValue != mode)
+  {
     modeValue = mode;
     lcd.setCursor(0, 0);
     if (mode == 0)
@@ -94,4 +95,15 @@ void lcdShowValue(const char *txt)
 {
   lcd.setCursor(2, 1);
   lcd.print(txt);
+}
+
+void lcdShowSoilResult(int idx, int value)
+{
+  char temp[12];
+  snprintf_P(temp,
+             12,
+             PSTR("%s (%d)"),
+             text[idx + TEXT_DRY],
+             value);
+  lcdShowValue(temp);
 }

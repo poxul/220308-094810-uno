@@ -14,8 +14,8 @@ const char origin[ORIGIN_MAX][MAX_ORIGIN_STRING_SIZE] =
 const char text[TEXT_MAX][MAX_TEXT_STRING_SIZE] =
 	{
 		"trocken",
-		"feucht",
 		"ok",
+		"feucht",
 		"nass",
 		"???",
 		"bewaessern!",

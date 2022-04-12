@@ -57,73 +57,21 @@ void showLcdHumidity()
     lcdShowValue(temp);
 }
 
-void showSoil(const char *name, const char *text, unsigned int value, bool blink)
-{
-    lcd.setCursor(0, 0);
-    lcd.print(name);
-    lcd.setCursor(0, 1);
-    lcd.print(text);
-    lcd.print(" (");
-    lcd.print(value);
-    lcd.print(")");
-    if (blink)
-    {
-        lcd.setCursor(0, 1);
-        lcd.blink_on();
-    }
-}
-
-const char *getValueString(SoilResult::SoilCondition condition)
-{
-    switch (condition)
-    {
-    case SoilResult::SoilCondition::dry:
-        return "trocken";
-    case SoilResult::SoilCondition::wet:
-        return "feucht";
-    case SoilResult::SoilCondition::humid:
-        return "ok";
-    case SoilResult::SoilCondition::water:
-        return "nass";
-    default:
-        return "???";
-    }
-}
-
-void showSoilResult(const char *txt, SoilResult *soilResult)
-{
-    showSoil(txt,
-             getValueString(soilResult->getSoilCondition()),
-             soilResult->getValue(),
-             soilResult->getSoilCondition() == SoilResult::SoilCondition::dry);
-}
 /**
- * @brief show soil moisture sensor 1
+ * @brief
  *
+ * @param soilResult
  */
-void showSoil1()
+void showSoilResult(SoilResult *soilResult)
 {
-    showSoilResult("Pflanze 1", &soilResult1);
+    lcdShowSoilResult(soilResult->getSoilCondition(), soilResult->getValue());
 }
 
 /**
- * @brief show soil moisture sensor 2
+ * @brief
  *
+ * @param dt
  */
-void showSoil2()
-{
-    showSoilResult("Pflanze 2", &soilResult2);
-}
-
-/**
- * @brief show soil moisture sensor 3
- *
- */
-void showSoil3()
-{
-    showSoilResult("Pflanze 3", &soilResult3);
-}
-
 void showDateTime(const RtcDateTime &dt)
 {
     char datestring[12];
@@ -134,8 +82,7 @@ void showDateTime(const RtcDateTime &dt)
                dt.Month(),
                dt.Day(),
                dt.Year());
-    lcd.setCursor(0, 0);
-    lcd.print(datestring);
+    lcdShowOrigin(datestring);
 
     snprintf_P(datestring,
                12,
@@ -143,8 +90,7 @@ void showDateTime(const RtcDateTime &dt)
                dt.Hour(),
                dt.Minute(),
                dt.Second());
-    lcd.setCursor(0, 1);
-    lcd.print(datestring);
+    lcdShowValue(datestring);
 }
 
 /**
@@ -155,8 +101,7 @@ void showLcd(unsigned int state)
 {
     Serial.print("Start show state: ");
     Serial.println(state);
-    lcd.clear();
-    lcd.blink_off();
+    int idx = 0;
     switch (state)
     {
     case STATE_SHOW_TEMPERATURE:
@@ -166,13 +111,19 @@ void showLcd(unsigned int state)
         showLcdHumidity();
         break;
     case STATE_SHOW_SOIL_SENSOR_1:
-        showSoil1();
+        idx = 1;
+        lcdShowOriginIdx(ORIGIN_PLANT);
+        showSoilResult(&soilResult1);
         break;
     case STATE_SHOW_SOIL_SENSOR_2:
-        showSoil2();
+        idx = 2;
+        lcdShowOriginIdx(ORIGIN_PLANT);
+        showSoilResult(&soilResult2);
         break;
     case STATE_SHOW_SOIL_SENSOR_3:
-        showSoil3();
+        idx = 3;
+        lcdShowOriginIdx(ORIGIN_PLANT);
+        showSoilResult(&soilResult3);
         break;
     case STATE_SHOW_DATE:
         showDateTime(Rtc.GetDateTime());
@@ -181,57 +132,6 @@ void showLcd(unsigned int state)
     default:
         break;
     }
-}
 
-void lcdAlarm(const char *txt, int id, const char *action)
-{
-    Serial.print("Show alarm: ");
-    Serial.println(txt);
-    lcd.setCursor(0, 0);
-    lcd.print(txt);
-    lcd.setCursor(0, 1);
-    lcd.print(action);
-    if (id > 0)
-    {
-        lcd.setCursor(14, 0);
-        lcd.print(id);
-    }
-    lcd.setCursor(14, 0);
-    lcd.blink_on();
-}
-
-void lcdEdit(const char *txt, int id, const char *action)
-{
-    Serial.print("Show edit: ");
-    Serial.println(txt);
-    lcd.setCursor(0, 0);
-    lcd.print(txt);
-    lcd.setCursor(0, 1);
-    lcd.print(action);
-    if (id > 0)
-    {
-        lcd.setCursor(14, 0);
-        lcd.print(id);
-    }
-    lcd.setCursor(14, 1);
-    lcd.blink_on();
-}
-
-/**
- * @brief show alarm state
- *
- */
-void showLcdAlarm(int alarm)
-{
-    Serial.print("Alarm state: ");
-    Serial.println(alarm);
-    lcd.clear();
-    if (alarm < 4)
-    {
-        lcdAlarm("Pflanze", alarm, "bewaessern!");
-    }
-    else if (alarm == 4)
-    {
-        lcdAlarm("Wasser", 0, "auffuellen!");
-    }
+    lcdShowID(idx);
 }
