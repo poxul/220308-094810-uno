@@ -14,6 +14,7 @@
 #include "lcdUtil.h"
 #include "rtClock.h"
 #include "showUtil.h"
+#include "textUtil.h"
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))
 
@@ -52,10 +53,9 @@ unsigned long lastView;
 
 unsigned int showState = 0;
 unsigned int lastShowState = 0;
+
 int editMode = 0;
-int lastEditMode = 0;
 int alarmMode = 0;
-int lastAlarm = 0;
 
 bool toggleEditMode = false;
 
@@ -199,23 +199,26 @@ void show()
     {
       editMode = 1;
     }
+    // edit mode run pump manual
     bool runMode = isPumpRunning(editMode);
     if (b2)
     {
       runMode = !runMode;
     }
     runMode &= isWaterLevelOk();
-
-    showLcdEdit(editMode, runMode);
-    setPumpRunning(editMode, runMode);
-  }
-  else if (alarmMode != 0)
-  {
-    // handle alarm mode
-    if (lastAlarm != alarmMode)
+    // show to lcd
+    lcdShowOriginIdx(ORIGIN_PUMP);
+    lcdShowID(editMode);
+    if (runMode)
     {
-      showLcdAlarm(alarmMode);
+      lcdShowStateIdx(TEXT_RUNNING);
     }
+    else
+    {
+      lcdShowStateIdx(TEXT_STOPPED);
+    }
+    // start / stop hardware
+    setPumpRunning(editMode, runMode);
   }
   else
   {
@@ -233,9 +236,10 @@ void show()
     }
   }
 
-  lastAlarm = alarmMode;
+  lcdShowAlarm(alarmMode);
+  lcdShowMode(editMode);
+
   lastShowState = showState;
-  lastEditMode = editMode;
 
   setBuzzer(buzz);
 }

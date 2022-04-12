@@ -9,6 +9,9 @@
 extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
 
+int alarmValue = -1;
+int modeValue = -1;
+
 void setupLCD()
 {
   lcd.init(); // initialize the lcd
@@ -21,7 +24,13 @@ void setupLCD()
   lcd.backlight();
 }
 
-void lcdShowOrigin(const char * txt)
+void lcdShowOriginIdx(int idx)
+{
+  lcd.setCursor(2, 0);
+  lcd.print(origin[idx]);
+}
+
+void lcdShowOrigin(const char *txt)
 {
   lcd.setCursor(2, 0);
   lcd.print(txt);
@@ -30,10 +39,11 @@ void lcdShowOrigin(const char * txt)
 void lcdShowID(int value)
 {
   lcd.setCursor(15, 0);
-  if( value > 0 ){
+  if (value > 0)
+  {
     lcd.print(value);
-  } 
-  else 
+  }
+  else
   {
     lcd.print(' ');
   }
@@ -41,33 +51,46 @@ void lcdShowID(int value)
 
 void lcdShowAlarm(int value)
 {
-  if (value > 0)
+  if (alarmValue != value)
   {
-    lcd.setCursor(0, 1);
-    lcd.print(value);
-    lcd.setCursor(0, 1);
-    lcd.blink_on();
-  }
-  else
-  {
-    lcd.blink_off();
+    alarmValue = value;
+    if (value > 0)
+    {
+      lcd.setCursor(0, 1);
+      lcd.print(value);
+      lcd.setCursor(0, 1);
+      lcd.blink_on();
+    }
+    else
+    {
+      lcd.blink_off();
+    }
   }
 }
 
 void lcdShowMode(int mode)
 {
-  lcd.setCursor(0, 0);
-  if (mode == 0)
-  {
-    lcd.print('i'); // info mode
-  }
-  else
-  {
-    lcd.print('e'); // edit mode
+  if( modeValue != mode ){
+    modeValue = mode;
+    lcd.setCursor(0, 0);
+    if (mode == 0)
+    {
+      lcd.print('i'); // info mode
+    }
+    else
+    {
+      lcd.print('e'); // edit mode
+    }
   }
 }
 
-void lcdShowValue(const char * txt)
+void lcdShowStateIdx(int idx)
+{
+  lcd.setCursor(2, 1);
+  lcd.print(text[idx]);
+}
+
+void lcdShowValue(const char *txt)
 {
   lcd.setCursor(2, 1);
   lcd.print(txt);

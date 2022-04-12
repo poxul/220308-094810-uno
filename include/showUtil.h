@@ -15,5 +15,3 @@ enum ShowState
   STATE_MAX
 };
 
-void showLcdAlarm(int alarm);
-void showLcdEdit(int edit, bool run);

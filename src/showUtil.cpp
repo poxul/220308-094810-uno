@@ -12,6 +12,7 @@
 #include "lcdUtil.h"
 #include "rtClock.h"
 #include "showUtil.h"
+#include "textUtil.h"
 
 extern DebugLogger logger;
 extern LiquidCrystal_I2C lcd;
@@ -30,11 +31,14 @@ extern RtcDS3231<TwoWire> Rtc;
  */
 void showLcdTemperature()
 {
-    lcd.setCursor(0, 0);
-    lcd.print("Temperatur:");
-    lcd.setCursor(6, 1);
-    lcd.print(temperatureResult.getTemperature());
-    lcd.print(" C");
+    lcdShowOriginIdx(ORIGIN_TEMPERATURE);
+    char temp[10];
+    snprintf_P(temp,
+               10,
+               PSTR("%2.1f 'C"),
+               temperatureResult.getTemperature());
+
+    lcdShowValue(temp);
 }
 
 /**
@@ -43,11 +47,14 @@ void showLcdTemperature()
  */
 void showLcdHumidity()
 {
-    lcd.setCursor(0, 0);
-    lcd.print("Luftfeuchtigkeit");
-    lcd.setCursor(4, 1);
-    lcd.print(temperatureResult.getHumidity());
-    lcd.print(" %");
+    lcdShowOriginIdx(ORIGIN_HUMIDITY);
+    char temp[10];
+    snprintf_P(temp,
+               10,
+               PSTR("%2.1f %%"),
+               temperatureResult.getHumidity());
+
+    lcdShowValue(temp);
 }
 
 void showSoil(const char *name, const char *text, unsigned int value, bool blink)
@@ -119,10 +126,10 @@ void showSoil3()
 
 void showDateTime(const RtcDateTime &dt)
 {
-    char datestring[20];
+    char datestring[12];
 
     snprintf_P(datestring,
-               20,
+               12,
                PSTR("%02u/%02u/%04u"),
                dt.Month(),
                dt.Day(),
@@ -131,7 +138,7 @@ void showDateTime(const RtcDateTime &dt)
     lcd.print(datestring);
 
     snprintf_P(datestring,
-               20,
+               12,
                PSTR("%02u:%02u:%02u"),
                dt.Hour(),
                dt.Minute(),
@@ -184,14 +191,13 @@ void lcdAlarm(const char *txt, int id, const char *action)
     lcd.print(txt);
     lcd.setCursor(0, 1);
     lcd.print(action);
-    if( id > 0)
+    if (id > 0)
     {
         lcd.setCursor(14, 0);
         lcd.print(id);
     }
     lcd.setCursor(14, 0);
     lcd.blink_on();
-
 }
 
 void lcdEdit(const char *txt, int id, const char *action)
@@ -202,7 +208,7 @@ void lcdEdit(const char *txt, int id, const char *action)
     lcd.print(txt);
     lcd.setCursor(0, 1);
     lcd.print(action);
-    if( id > 0)
+    if (id > 0)
     {
         lcd.setCursor(14, 0);
         lcd.print(id);
@@ -220,33 +226,12 @@ void showLcdAlarm(int alarm)
     Serial.print("Alarm state: ");
     Serial.println(alarm);
     lcd.clear();
-    if( alarm < 4){
-        lcdAlarm("Pflanze",alarm, "bewaessern!");
-    } else if( alarm == 4 )
+    if (alarm < 4)
     {
-        lcdAlarm("Wasser",0, "auffuellen!");
+        lcdAlarm("Pflanze", alarm, "bewaessern!");
     }
-}
-
-/**
- * @brief show alarm state
- *
- */
-void showLcdEdit(int edit, bool run)
-{
-    Serial.print("Edit state: ");
-    Serial.println(edit);
-    lcd.clear();
-    if( edit < 4){
-        if( run ){
-            lcdEdit("Pumpe",edit, "laeuft!");
-        } 
-        else
-        {
-            lcdEdit("Pumpe",edit, "angehalten!");
-        }
-    } else if( edit >= 4 )
+    else if (alarm == 4)
     {
-        lcdEdit("Geraet",edit, "unbekannt!");
+        lcdAlarm("Wasser", 0, "auffuellen!");
     }
 }
