@@ -236,7 +236,7 @@ void show()
     else if (editMode <= 6) // switch plants on and off
     {
       // edit mode run pump manual
-      bool active = isPlantActive(editMode - 3);
+      bool active = isPlantActive(editMode - 4);
       if (b2)
       {
         active = !active;
@@ -254,7 +254,7 @@ void show()
         lcdShowStateIdx(TEXT_DISABLED);
       }
       // start / stop hardware
-      setPlantActive(editMode - 3, active);
+      setPlantActive(editMode - 4, active);
     }
   }
   else

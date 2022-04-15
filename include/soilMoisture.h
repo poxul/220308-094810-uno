@@ -21,6 +21,7 @@ public:
     SoilCondition getSoilCondition();
     void setValid(bool ok);
     bool isValid();
+    bool isEnabled();
 
 private:
     bool valid;
