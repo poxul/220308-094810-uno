@@ -22,14 +22,14 @@ extern RtcDS3231<TwoWire> Rtc;
  * @brief show temperature on lcd
  *
  */
-void showLcdTemperature()
+void showLcdTemperature(float value)
 {
     lcdShowOriginIdx(ORIGIN_TEMPERATURE);
-    char temp[10];
+    char temp[LCD_TEXT_LEN + 1];
     snprintf_P(temp,
-               10,
-               PSTR("%2.1f 'C"),
-               temperatureResult.getTemperature());
+               sizeof(temp),
+               PSTR("%d.%02d 'C'"),
+               (int)value, (int)(value * 100) % 100);
 
     lcdShowValue(temp);
 }
@@ -38,14 +38,14 @@ void showLcdTemperature()
  * @brief show air humidity on lcd
  *
  */
-void showLcdHumidity()
+void showLcdHumidity(float value)
 {
     lcdShowOriginIdx(ORIGIN_HUMIDITY);
-    char temp[10];
+    char temp[LCD_TEXT_LEN + 1];
     snprintf_P(temp,
-               10,
-               PSTR("%2.1f %%"),
-               temperatureResult.getHumidity());
+               sizeof(temp),
+               PSTR("%d.%02d %%"),
+               (int)value, (int)(value * 100) % 100);
 
     lcdShowValue(temp);
 }
@@ -67,10 +67,10 @@ void showSoilResult(SoilResult *soilResult)
  */
 void showDateTime(const RtcDateTime &dt)
 {
-    char datestring[12];
+    char datestring[LCD_TEXT_LEN + 1];
 
     snprintf_P(datestring,
-               12,
+               sizeof(datestring),
                PSTR("%02u/%02u/%04u"),
                dt.Month(),
                dt.Day(),
@@ -78,7 +78,7 @@ void showDateTime(const RtcDateTime &dt)
     lcdShowOrigin(datestring);
 
     snprintf_P(datestring,
-               12,
+               sizeof(datestring),
                PSTR("%02u:%02u:%02u"),
                dt.Hour(),
                dt.Minute(),
@@ -98,10 +98,10 @@ void showLcd(unsigned int state)
     switch (state)
     {
     case STATE_SHOW_TEMPERATURE:
-        showLcdTemperature();
+        showLcdTemperature(temperatureResult.getTemperature());
         break;
     case STATE_SHOW_HUMIDITY:
-        showLcdHumidity();
+        showLcdHumidity(temperatureResult.getHumidity());
         break;
     case STATE_SHOW_SOIL_SENSOR_1:
         idx = 1;

@@ -95,12 +95,15 @@ void checkAlarm()
   {
     alarmMode = 4;
   }
-
-  for (size_t i = 0; i < 3; i++)
+  else
   {
-    if (soilResult[i].isValid() && soilResult[i].getSoilCondition() == SoilResult::SoilCondition::dry)
+
+    for (size_t i = 0; i < 3; i++)
     {
-      alarmMode = i + 1;
+      if (soilResult[i].isValid() && soilResult[i].getSoilCondition() == SoilResult::SoilCondition::dry)
+      {
+        alarmMode = i + 1;
+      }
     }
   }
 }

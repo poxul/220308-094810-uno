@@ -17,6 +17,7 @@ const char text[TEXT_MAX][MAX_TEXT_STRING_SIZE] =
 		"ok",
 		"feucht",
 		"nass",
+		"wasser",
 		"???",
 		"bewaessern!",
 		"auffuellen!",

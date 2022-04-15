@@ -7,10 +7,10 @@ public:
     // color may be red (value 0), yellow (value 1), green (value 20), or blue (value 21)
     enum SoilCondition
     {
-        water,
-        wet,
+        dry,
         humid,
-        dry
+        wet,
+        water,
     };
 
     SoilResult();

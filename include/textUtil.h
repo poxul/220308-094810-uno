@@ -15,6 +15,7 @@ enum ValueText
 	TEXT_OK,
 	TEXT_HUMID,
 	TEXT_WET,
+	TEXT_WATER,
 	TEXT_X,
 	TEXT_WATERING,
 	TEXT_FILL,
@@ -25,3 +26,5 @@ enum ValueText
 	TEXT_DISABLED,
 	TEXT_MAX
 };
+
+#define LCD_TEXT_LEN 12
