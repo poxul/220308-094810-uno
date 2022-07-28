@@ -322,4 +322,11 @@ Komponenten hinzufügen
 
     
 
+Menüsteuerung:
+    Wechsel zwischen Bearbeiten- und Anzeige-Modus:
+        Beide Tasten lange drücken.
+    Wechsel zwischen den Pflanzen Taste 1
+    Umschalten ( Ein/ Aus ) Taste 2
+
+
 

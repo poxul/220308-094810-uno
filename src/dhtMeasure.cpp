@@ -50,7 +50,7 @@ unsigned int DhtMeasure::setup(){
   Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("%"));
   Serial.println(F("------------------------------------"));
   // Set delay between sensor readings based on sensor details.
-  uint32_t delayMS = sensor.min_delay / 1000 + 100;
+  uint32_t delayMS = 100;
   Serial.print  (F("Delay:       ")); Serial.print(delayMS); Serial.println(F("ms"));
   return delayMS;
 }

@@ -91,21 +91,15 @@ void setPlantActive(int idx, bool active)
 void checkAlarm()
 {
   alarmMode = 0;
-  if (!isWaterLevelOk())
-  {
-    alarmMode = 4;
-  }
-  else
-  {
 
-    for (size_t i = 0; i < 3; i++)
+  for (size_t i = 0; i < 3; i++)
+  {
+    if (soilResult[i].isValid() && soilResult[i].getSoilCondition() == SoilResult::SoilCondition::dry)
     {
-      if (soilResult[i].isValid() && soilResult[i].getSoilCondition() == SoilResult::SoilCondition::dry)
-      {
-        alarmMode = i + 1;
-      }
+      alarmMode = i + 1;
     }
   }
+
 }
 
 /**
@@ -155,10 +149,8 @@ void setup()
  */
 void show()
 {
-  Serial.println("Show loop");
   bool b1 = isButton1(); // next
   bool b2 = isButton2(); // toggle
-  bool buzz = false;
 
   // check edit mode
   if (b1 && b2)
@@ -169,7 +161,6 @@ void show()
       {
         editMode = 1;
         lastShowState = showState + 1;
-        buzz = true;
       }
       else
       {
@@ -185,10 +176,8 @@ void show()
     toggleEditMode = false;
   }
 
-  // Beep
-
   // handle backlight
-  if (editMode || isMotion())
+  if (editMode || isMotion() || b1 || b2)
   {
     lcd.backlight();
   }
@@ -205,38 +194,15 @@ void show()
     {
       editMode++;
     }
-    if (editMode > 6)
+    if (editMode > 3)
     {
       editMode = 1;
     }
 
-    if (editMode <= 3) // pumps
+    if (editMode <= 3) // switch plants on and off
     {
       // edit mode run pump manual
-      bool runMode = isPumpRunning(editMode);
-      if (b2)
-      {
-        runMode = !runMode;
-      }
-      runMode &= isWaterLevelOk();
-      // show to lcd
-      lcdShowOriginIdx(ORIGIN_PUMP);
-      lcdShowID(editMode);
-      if (runMode)
-      {
-        lcdShowStateIdx(TEXT_RUNNING);
-      }
-      else
-      {
-        lcdShowStateIdx(TEXT_STOPPED);
-      }
-      // start / stop hardware
-      setPumpRunning(editMode, runMode);
-    }
-    else if (editMode <= 6) // switch plants on and off
-    {
-      // edit mode run pump manual
-      bool active = isPlantActive(editMode - 4);
+      bool active = isPlantActive(editMode - 1); // Index 0 - 2
       if (b2)
       {
         active = !active;
@@ -244,7 +210,7 @@ void show()
 
       // show to lcd
       lcdShowOriginIdx(ORIGIN_PLANT);
-      lcdShowID(editMode - 3);
+      lcdShowID(editMode, false); // Number 1- 3
       if (active)
       {
         lcdShowStateIdx(TEXT_ACTIVE);
@@ -254,7 +220,7 @@ void show()
         lcdShowStateIdx(TEXT_DISABLED);
       }
       // start / stop hardware
-      setPlantActive(editMode - 4, active);
+      setPlantActive(editMode - 1, active);
     }
   }
   else
@@ -273,12 +239,10 @@ void show()
     }
   }
 
-  lcdShowAlarm(alarmMode);
   lcdShowMode(editMode);
+  lcdShowAlarm(alarmMode);
 
   lastShowState = showState;
-
-  setBuzzer(buzz);
 }
 
 /**
@@ -298,9 +262,19 @@ void loop()
     checkAlarm();
     lastMeasurement = now;
   }
+  
+  unsigned long waitTime;
+  if (editMode != 0)
+  {
+    waitTime = 100; 
+  } 
+  else
+  {
+    waitTime = 2000;
+  }
 
   // check for priorized values
-  if ((now - lastView) > 2000)
+  if ((now - lastView) > waitTime)
   {
     // show result
     show();

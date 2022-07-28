@@ -7,10 +7,7 @@ void scanI2C() {
     Wire.beginTransmission(address);
     byte error = Wire.endTransmission();
     if (error == 0) {
-      Serial.print("I2C device found at address 0x");
-      if (address<16) Serial.print("0");
-      Serial.print(address, HEX);
-      Serial.println(" !");
+      // Device not found
     } else if (error==4) {
       Serial.print("Unknow error at address 0x");
       if (address<16) Serial.print("0");
