@@ -299,3 +299,27 @@ Manuelle Bedinung der Pumpen:
 Einschalten der automatischen Bewässerung:
     Bewaesserung 1
          ein
+
+Probleme und Nachteile:
+
+Die Strom Versorgung ist ein Problem, auch bei ausreichedender Licht Menge reicht die Energie nicht um PlantSupport dauerhaft zu versorgen. 
+Ein weiteres Problem ist, das die Akkus durch den Spannungskonstanter komplett entleert werden und damit zerstört sind.
+Die fehlende Verbindung zum Wlan verhindert eine Warnmeldung auf das Handy.
+Die Aufwändige Verkabelung macht das System unhandlich.
+
+- Komponenten abspecken:
+    Uhr
+    Pumpen
+    Hupe
+    Taster
+
+Komponenten überarbeiten:
+    Stromversorgung
+
+Komponenten hinzufügen
+    Wlan anbindung
+    Zeit Steuereung
+
+    
+
+

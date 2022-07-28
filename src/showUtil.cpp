@@ -28,7 +28,7 @@ void showLcdTemperature(float value)
     char temp[LCD_TEXT_LEN + 1];
     snprintf_P(temp,
                sizeof(temp),
-               PSTR("%d.%02d 'C'"),
+               PSTR("%d.%02d 'C"),
                (int)value, (int)(value * 100) % 100);
 
     lcdShowValue(temp);

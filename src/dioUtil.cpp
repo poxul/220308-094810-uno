@@ -119,5 +119,5 @@ bool isWaterLevelOk()
   int m = digitalRead(WATER_LEVEL);
   Serial.print(F("Water level state: "));
   Serial.println(m);
-  return m == HIGH;
+  return m == LOW;
 }
