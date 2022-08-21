@@ -8,8 +8,8 @@
 
 #include "soilMoisture.h"
 
-#define SOIL_MOISTURE_MIN 285 // 0% min value -> sensor is in water
-#define SOIL_MOISTURE_MAX 591 // 100% max value -> sensor is in air
+#define SOIL_MOISTURE_MIN 200 // 285 = 0% min value -> sensor is in water
+#define SOIL_MOISTURE_MAX 400 // 591 = 100% max value -> sensor is in air
 
 #define NUM_STEPS 3
 

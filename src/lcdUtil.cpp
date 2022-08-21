@@ -110,9 +110,9 @@ void setupLCD()
 
   lcd.clear();
   lcd.setCursor(2, 0);
-  lcd.print("Plant-Observer");
+  lcd.print(APP_NAME);
   lcd.setCursor(2, 1);
-  lcd.print("Version 1.4");
+  lcd.print(APP_VERSION);
   lcd.backlight();
 }
 

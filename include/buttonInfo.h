@@ -13,6 +13,7 @@ public:
 private:
     bool state;
     int toggeled;
+    bool lastState;
 };
 
 #endif

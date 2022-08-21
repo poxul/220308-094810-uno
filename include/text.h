@@ -4,6 +4,9 @@
 #define MAX_TEXT_STRING_SIZE 12
 #define CHAR_SPACE ' '
 
+#define APP_NAME "Plant-Observer"
+#define APP_VERSION "Version 1.4a"
+
 const char origin[ORIGIN_MAX][MAX_ORIGIN_STRING_SIZE] =
 	{"Temperatur",
 	 "Luftfeuchte",

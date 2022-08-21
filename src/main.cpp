@@ -13,6 +13,7 @@
 #include "rtClock.h"
 #include "showUtil.h"
 #include "textUtil.h"
+#include "buttonInfo.h"
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))
 
@@ -48,6 +49,11 @@ SoilMoisture soil[3] =
 
 // rt clock
 RtcDS3231<TwoWire> Rtc(Wire);
+
+ButtonInfo buttons[2] =
+  {
+    ButtonInfo(),
+    ButtonInfo()};
 
 unsigned long lastMeasurement;
 unsigned long lastView;
