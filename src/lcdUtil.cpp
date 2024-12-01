@@ -5,83 +5,76 @@
 #include "text.h"
 
 byte ERROR_PLANT_1[] = {
-  B11111,
-  B11101,
-  B11001,
-  B10101,
-  B11101,
-  B11101,
-  B11111,
-  B00000
+    B11111,
+    B11101,
+    B11001,
+    B10101,
+    B11101,
+    B11101,
+    B11111,
+    B00000
 
- };
+};
 
 byte ERROR_PLANT_2[] = {
-  B11111,
-  B10001,
-  B11101,
-  B10011,
-  B10111,
-  B10001,
-  B11111,
-  B00000
- };
+    B11111,
+    B10001,
+    B11101,
+    B10011,
+    B10111,
+    B10001,
+    B11111,
+    B00000};
 
 byte ERROR_PLANT_3[] = {
-  B11111,
-  B10001,
-  B11101,
-  B11001,
-  B11101,
-  B10001,
-  B11111,
-  B00000
- };
+    B11111,
+    B10001,
+    B11101,
+    B11001,
+    B11101,
+    B10001,
+    B11111,
+    B00000};
 
 byte SMILY_FACE[] = {
-  B00000,
-  B11011,
-  B11011,
-  B00000,
-  B00100,
-  B10001,
-  B10001,
-  B11111
- };
+    B00000,
+    B11011,
+    B00000,
+    B00100,
+    B0100,
+    B00000,
+    B10001,
+    B01110};
 
 byte FLOWER[] = {
-  B10101,
-  B11111,
-  B11111,
-  B01110,
-  B00100,
-  B00100,
-  B00100,
-  B00000
- };
+    B10101,
+    B11111,
+    B11111,
+    B01110,
+    B00100,
+    B00100,
+    B00100,
+    B00000};
 
- byte DEGREE[] = {
-  B01110,
-  B01010,
-  B01110,
-  B00000,
-  B00000,
-  B00000,
-  B00000,
-  B00000
- };
+byte DEGREE[] = {
+    B01110,
+    B01010,
+    B01110,
+    B00000,
+    B00000,
+    B00000,
+    B00000,
+    B00000};
 
- byte EDIT_MODE[] = {
-  B11111,
-  B11011,
-  B10101,
-  B10101,
-  B10101,
-  B11111,
-  B01110,
-  B00100
- };
-
+byte EDIT_MODE[] = {
+    B11111,
+    B11011,
+    B10101,
+    B10101,
+    B10101,
+    B11111,
+    B01110,
+    B00100};
 
 extern LiquidCrystal_I2C lcd;
 
@@ -100,13 +93,13 @@ void setupLCD()
 {
   lcd.init(); // initialize the lcd
   // Print a message to the LCD.
-  lcd.createChar(IDX_SMILY,SMILY_FACE);
-  lcd.createChar(IDX_ERROR_1,ERROR_PLANT_1);
-  lcd.createChar(IDX_ERROR_2,ERROR_PLANT_2);
-  lcd.createChar(IDX_ERROR_3,ERROR_PLANT_3);
-  lcd.createChar(IDX_FLOWER,FLOWER);
-  lcd.createChar(IDX_DEGREE,DEGREE);
-  lcd.createChar(IDX_EDIT,EDIT_MODE);
+  lcd.createChar(IDX_SMILY, SMILY_FACE);
+  lcd.createChar(IDX_ERROR_1, ERROR_PLANT_1);
+  lcd.createChar(IDX_ERROR_2, ERROR_PLANT_2);
+  lcd.createChar(IDX_ERROR_3, ERROR_PLANT_3);
+  lcd.createChar(IDX_FLOWER, FLOWER);
+  lcd.createChar(IDX_DEGREE, DEGREE);
+  lcd.createChar(IDX_EDIT, EDIT_MODE);
 
   lcd.clear();
   lcd.setCursor(2, 0);
@@ -137,14 +130,15 @@ void lcdShowID(int value, bool active)
   lcd.setCursor(14, 0);
   if (value > 0 && value <= 3)
   {
-    if( active )
+    if (active)
     {
       lcd.write(IDX_FLOWER); // flower
       lcd.write(value);
     }
-    else{
+    else
+    {
       lcd.print(CHAR_SPACE);
-      lcd.print(value);  
+      lcd.print(value);
     }
   }
   else
@@ -160,7 +154,14 @@ void lcdShowAlarm(int value)
   {
     alarmValue = value;
     lcd.setCursor(0, 1);
-    lcd.write(value); // IDX_SMILY == 0, IDX_ERROR_X = 1,2,3
+    if (value >= 0)
+    {
+      lcd.write(value); // IDX_SMILY == 0, IDX_ERROR_X = 1,2,3
+    }
+    else
+    {
+      lcd.write(' '); // empty
+    }
   }
 }
 
@@ -205,11 +206,11 @@ void lcdShowValue(const char *txt)
 
 void lcdShowSoilResult(int idx, int value)
 {
-    char temp[LCD_TEXT_LEN + 1];
-    snprintf_P(temp,
-               sizeof(temp),
-               PSTR("%s %d%%"),
-               text[idx + TEXT_DRY],
-               (int)(value+0.5));
+  char temp[LCD_TEXT_LEN + 1];
+  snprintf_P(temp,
+             sizeof(temp),
+             PSTR("%s %d%%"),
+             text[idx + TEXT_DRY],
+             (int)(value + 0.5));
   lcdShowValue(temp);
 }

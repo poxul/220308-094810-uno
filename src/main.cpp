@@ -24,6 +24,11 @@
 #define SOIL_MOISTURE_2 A1
 #define SOIL_MOISTURE_3 A2
 
+#define MOTION_LOOPS 20
+
+#define WAIT_TIME_EDIT 100
+#define WAIT_TIME_SHOW 2500
+
 uint32_t delayMS;
 
 // temperature
@@ -51,9 +56,9 @@ SoilMoisture soil[3] =
 RtcDS3231<TwoWire> Rtc(Wire);
 
 ButtonInfo buttons[2] =
-  {
-    ButtonInfo(),
-    ButtonInfo()};
+    {
+        ButtonInfo(),
+        ButtonInfo()};
 
 unsigned long lastMeasurement;
 unsigned long lastView;
@@ -65,6 +70,8 @@ int editMode = 0;
 int alarmMode = 0;
 
 bool toggleEditMode = false;
+
+int motion = MOTION_LOOPS;
 
 /**
  * @brief measurement called every 10 seconds
@@ -105,7 +112,6 @@ void checkAlarm()
       alarmMode = i + 1;
     }
   }
-
 }
 
 /**
@@ -120,21 +126,21 @@ void setup()
   } // Wait for Serial to start
   delay(750);
 
-  Serial.print("Compiled: ");
+  Serial.print(F("Compiled: "));
   Serial.print(__DATE__);
   Serial.println(__TIME__);
   scanI2C();
-  Serial.println("Test i2c done");
+  Serial.println(F("Test i2c done"));
 
   setupLCD();
-  Serial.println("Setup lcd done");
+  Serial.println(F("Setup lcd done"));
   setupDioUtil();
-  Serial.println("Setup digital io done");
+  Serial.println(F("Setup digital io done"));
   delayMS = dhtM.setup();
-  Serial.println("Setup dht22 done");
+  Serial.println(F("Setup dht22 done"));
 
   setupRTC();
-  Serial.println("Setup rtc done");
+  Serial.println(F("Setup rtc done"));
 
   for (size_t i = 0; i < 3; i++)
   {
@@ -146,7 +152,31 @@ void setup()
   lastMeasurement = now;
   measure();
   // setup done
-  Serial.println("Setup done");
+  Serial.println(F("Setup done"));
+}
+
+bool checkMotion()
+{
+  if (isMotion())
+  {
+    Serial.print(F("Motion detected "));
+    Serial.println(motion);
+    if (motion <= 0)
+    {
+      showState = STATE_SHOW;
+    }
+    motion = MOTION_LOOPS;
+  }
+  else
+  {
+    if (motion > 0)
+    {
+      motion--;
+    }
+    Serial.print(F("Motion not detected "));
+    Serial.println(motion);
+  }
+  return motion > 0;
 }
 
 /**
@@ -183,7 +213,7 @@ void show()
   }
 
   // handle backlight
-  if (editMode || isMotion() || b1 || b2)
+  if (editMode || motion > 0 || b1 || b2)
   {
     lcd.backlight();
   }
@@ -246,7 +276,14 @@ void show()
   }
 
   lcdShowMode(editMode);
-  lcdShowAlarm(alarmMode);
+  if (showState != STATE_SHOW_SOIL_SENSOR_1 && showState != STATE_SHOW_SOIL_SENSOR_2 && showState != STATE_SHOW_SOIL_SENSOR_3)
+  {
+    lcdShowAlarm(alarmMode);
+  }
+  else
+  {
+    lcdShowAlarm(-1);
+  }
 
   lastShowState = showState;
 }
@@ -261,6 +298,7 @@ void loop()
 
   // Delay between loops.
   delay(delayMS);
+  checkMotion();
   if ((now - lastMeasurement) > 10000)
   {
     // read new values
@@ -268,15 +306,15 @@ void loop()
     checkAlarm();
     lastMeasurement = now;
   }
-  
+
   unsigned long waitTime;
   if (editMode != 0)
   {
-    waitTime = 100; 
-  } 
+    waitTime = WAIT_TIME_EDIT;
+  }
   else
   {
-    waitTime = 2000;
+    waitTime = WAIT_TIME_SHOW;
   }
 
   // check for priorized values
