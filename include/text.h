@@ -5,7 +5,7 @@
 #define CHAR_SPACE ' '
 
 #define APP_NAME "Plant-Observer"
-#define APP_VERSION "Version 1.4a"
+#define APP_VERSION "Version 02.01"
 
 const char origin[ORIGIN_MAX][MAX_ORIGIN_STRING_SIZE] =
 	{"Temperatur",

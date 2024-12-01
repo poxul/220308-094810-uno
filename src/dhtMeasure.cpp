@@ -50,7 +50,7 @@ unsigned int DhtMeasure::setup(){
   Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("%"));
   Serial.println(F("------------------------------------"));
   // Set delay between sensor readings based on sensor details.
-  uint32_t delayMS = 100;
+  uint32_t delayMS = 1000;
   Serial.print  (F("Delay:       ")); Serial.print(delayMS); Serial.println(F("ms"));
   return delayMS;
 }
@@ -64,7 +64,7 @@ void DhtMeasure::read(DhtResult* result){
     result->setTemperature(-300.0);
   } else {
     Serial.print(F("Temperature: "));
-    Serial.print(event.temperature);
+    Serial.print(event.temperature,1);
     Serial.println(F("°C"));
     result->setTemperature(event.temperature);
   }
@@ -75,7 +75,7 @@ void DhtMeasure::read(DhtResult* result){
     result->setHumidity(0.0);
   } else {
     Serial.print(F("Humidity: "));
-    Serial.print(event.relative_humidity);
+    Serial.print(event.relative_humidity,0);
     Serial.println(F("%"));
     result->setHumidity(event.relative_humidity);
   }

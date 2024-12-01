@@ -205,11 +205,11 @@ void lcdShowValue(const char *txt)
 
 void lcdShowSoilResult(int idx, int value)
 {
-  char temp[LCD_TEXT_LEN + 1];
-  snprintf_P(temp,
-             sizeof(temp),
-             PSTR("%s %d"),
-             text[idx + TEXT_DRY],
-             value);
+    char temp[LCD_TEXT_LEN + 1];
+    snprintf_P(temp,
+               sizeof(temp),
+               PSTR("%s %d%%"),
+               text[idx + TEXT_DRY],
+               (int)(value+0.5));
   lcdShowValue(temp);
 }

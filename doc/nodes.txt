@@ -1,0 +1,2 @@
+- Anzeige: Die Warnanzeige sollte bei der Anzeige der Bodenfeuchtigkeit ausgeblendet werden
+- Der Zyklus sollte neu beginne, wenn die Bewegung erkannt wurde ( und noch kein Zyklus läuft )

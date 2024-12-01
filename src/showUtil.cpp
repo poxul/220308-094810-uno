@@ -30,8 +30,8 @@ void showLcdTemperature(float value)
     char temp[LCD_TEXT_LEN + 1];
     snprintf_P(temp,
                sizeof(temp),
-               PSTR("%d.%02d \05C"),
-               (int)value, (int)(value * 100) % 100);
+               PSTR("%d.%01d \05C"),
+               (int)value, (int)(value * 10) % 10);
 
     lcdShowValue(temp);
 }
@@ -46,8 +46,8 @@ void showLcdHumidity(float value)
     char temp[LCD_TEXT_LEN + 1];
     snprintf_P(temp,
                sizeof(temp),
-               PSTR("%d.%02d %%"),
-               (int)value, (int)(value * 100) % 100);
+               PSTR("%d %%"),
+               (int)(value + 0.5));
 
     lcdShowValue(temp);
 }
@@ -59,7 +59,7 @@ void showLcdHumidity(float value)
  */
 void showSoilResult(SoilResult *soilResult)
 {
-    lcdShowSoilResult(soilResult->getSoilCondition(), soilResult->getValue());
+    lcdShowSoilResult(soilResult->getSoilCondition(), soilResult->getPercent());
 }
 
 /**

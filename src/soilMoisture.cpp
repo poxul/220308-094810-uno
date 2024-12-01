@@ -8,8 +8,10 @@
 
 #include "soilMoisture.h"
 
-#define SOIL_MOISTURE_MIN 200 // 285 = 0% min value -> sensor is in water
-#define SOIL_MOISTURE_MAX 400 // 591 = 100% max value -> sensor is in air
+#define SOIL_MOISTURE_MIN 200                                               // 285 = 0% min value -> sensor is in water
+#define SOIL_MOISTURE_MAX 400                                               // 591 = 100% max value -> sensor is in air
+
+#define SOIL_PERCENT ((float) 200.0 / (SOIL_MOISTURE_MAX - SOIL_MOISTURE_MIN)) // 1 percent
 
 #define NUM_STEPS 3
 
@@ -38,6 +40,24 @@ void SoilResult::setValue(int v)
 void SoilResult::setCondition(SoilResult::SoilCondition c)
 {
     soil = c;
+}
+
+void SoilResult::setPercent(float p)
+{
+    if (p < -50.0)
+    {
+        p = -50.0;
+    }
+    if (p > 150.0)
+    {
+        p = 150.0;
+    }
+    percent = p;
+}
+
+float SoilResult::getPercent()
+{
+    return percent;
 }
 
 SoilResult::SoilCondition SoilResult::getSoilCondition()
@@ -88,6 +108,10 @@ void SoilMoisture::read(SoilResult *result)
     Serial.print(" value: ");
     Serial.print(soilMoistureValue);
     Serial.println(F(" x"));
+    result->setPercent(((float)(SOIL_MOISTURE_MAX - soilMoistureValue) * SOIL_PERCENT));
+    Serial.print(F(" percent: "));
+    Serial.print(result->getPercent(),0);
+    Serial.println(F(" %"));
 }
 
 void SoilMoisture::setEnabled(bool on)

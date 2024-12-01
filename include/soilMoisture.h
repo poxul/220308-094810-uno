@@ -16,16 +16,19 @@ public:
     SoilResult();
     void setValue(int v);
     void setCondition(SoilCondition c);
+    void setPercent(float p);
 
     int getValue();
     SoilCondition getSoilCondition();
     void setValid(bool ok);
     bool isValid();
+    float getPercent();
 
 private:
     bool valid;
     int value;
     SoilCondition soil;
+    float percent;
 };
 
 class SoilMoisture
@@ -42,6 +45,7 @@ private:
     int soilMoistureValue = 0; // set the initial value of variable soilMoistureValue to 0
     int analogInput;
     int step;
+    float percent;
 };
 
 #endif
